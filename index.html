@@ -1,146 +1,478 @@
-(function () {
-  'use strict';
 
-  const NS  = 'http://www.w3.org/2000/svg';
-  const svg = document.getElementById('bg-canvas');
-  const vw  = window.innerWidth;
-  const vh  = window.innerHeight;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniFinder — Подбор университетов</title>
+<style>
+:root {
+  --bg:#f5f7fc;
+  --card:#ffffff;
+  --text:#17213b;
+  --muted:#68738b;
+  --primary:#5b5ce2;
+  --border:#e4e8f1;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Inter,Arial,sans-serif;
+  background:var(--bg);color:var(--text);
+}
+header{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:20px 7%;display:flex;justify-content:space-between;
+  align-items:center;gap:15px;flex-wrap:wrap;
+}
+.logo{font-size:23px;font-weight:800;color:var(--primary)}
+.logo span{color:var(--text)}
+header small{color:var(--muted)}
+main{max-width:1100px;margin:35px auto;padding:0 20px}
+.hero{
+  background:linear-gradient(125deg,#22245d,#6265ec);
+  color:white;padding:42px;border-radius:24px;margin-bottom:25px;
+}
+.hero h1{font-size:clamp(28px,5vw,43px);margin:0 0 14px}
+.hero p{line-height:1.7;color:#e4e5ff;max-width:650px}
+.pill{
+  display:inline-block;background:#ffffff20;padding:8px 13px;
+  border-radius:30px;font-size:13px;margin-bottom:16px
+}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start}
+.panel,.university{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:24px;
+}
+.panel h2,.results h2{margin-top:0;font-size:21px}
+label{display:block;font-size:13px;font-weight:700;margin:17px 0 7px}
+input,select{
+  width:100%;padding:12px;border:1px solid #dce1ed;
+  border-radius:10px;font-size:15px;background:white;color:var(--text)
+}
+input:focus,select:focus{outline:2px solid #aaaaff;border-color:var(--primary)}
+button{
+  border:0;background:var(--primary);color:white;padding:14px 18px;
+  border-radius:11px;font-weight:700;font-size:15px;cursor:pointer
+}
+button:hover{filter:brightness(.94)}
+.submit{width:100%;margin-top:22px}
+.results{min-width:0}
+.results-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.count{font-size:13px;color:var(--muted)}
+.university{margin-top:15px;padding:21px}
+.uni-top{display:flex;gap:14px;align-items:flex-start}
+.uni-icon{
+  flex-shrink:0;width:48px;height:48px;display:grid;place-items:center;
+  background:#eeefff;border-radius:13px;font-size:25px
+}
+.uni-title{font-size:18px;font-weight:800;margin:2px 0 6px}
+.uni-location{color:var(--muted);font-size:13px}
+.tag{
+  display:inline-block;background:#eef0ff;color:#4849bb;
+  border-radius:7px;padding:6px 9px;font-size:12px;margin:12px 5px 0 0
+}
+.tag.green{background:#e7f8ed;color:#187847}
+.uni-description{font-size:14px;color:#566078;line-height:1.65}
+.match-label{display:flex;justify-content:space-between;font-size:12px;margin:17px 0 7px}
+.bar{height:7px;border-radius:10px;background:#eceefa;overflow:hidden}
+.bar div{height:100%;background:var(--primary);border-radius:10px}
+.why{font-size:13px;line-height:1.65;background:#f7f8ff;padding:12px;border-radius:10px;margin-top:15px}
+.empty{text-align:center;padding:45px 20px;color:var(--muted);line-height:1.8}
+.notice{font-size:12px;color:var(--muted);line-height:1.7;margin:24px 0}
+footer{text-align:center;padding:28px;color:var(--muted);font-size:13px}
+.hidden{display:none}
+@media(max-width:800px){
+ .layout{grid-template-columns:1fr}
+ .hero{padding:27px}
+ header{padding:17px 5%}
+ main{margin:22px auto;padding:0 14px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Uni<span>Finder.</span></div>
+  <small>Твой путь к университету начинается здесь.</small>
+</header>
 
-  function r(min, max) { return min + Math.random() * (max - min); }
-  function pick(arr)   { return arr[Math.floor(Math.random() * arr.length)]; }
+<main>
+  <section class="hero">
+    <div class="pill">🎓 UNIVERSITY MATCH</div>
+    <h1>Найди университет своей мечты</h1>
+    <p>Расскажи нам о своих результатах, интересах и бюджете.
+       UniFinder подберёт университеты, которые стоит рассмотреть,
+       и объяснит, на что обратить внимание при поступлении.</p>
+  </section>
 
-  function mkEl(tag, attrs, parent) {
-    const el = document.createElementNS(NS, tag);
-    Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-    if (parent) parent.appendChild(el);
-    return el;
+  <div class="layout">
+    <section class="panel">
+      <h2>Твои данные</h2>
+      <p style="font-size:13px;color:#68738b;line-height:1.6">
+        Заполни форму, чтобы получить персональный список.
+      </p>
+
+      <form id="studentForm">
+        <label for="country">Гражданство</label>
+        <select id="country" required>
+          <option value="uz">Узбекистан</option>
+          <option value="kz">Казахстан</option>
+          <option value="other">Другая страна</option>
+        </select>
+
+        <label for="destination">Где хочешь учиться?</label>
+        <select id="destination" required>
+          <option value="any">Любая страна</option>
+          <option value="kz">Казахстан</option>
+          <option value="uz">Узбекистан</option>
+          <option value="tr">Турция</option>
+          <option value="my">Малайзия</option>
+        </select>
+
+        <label for="field">Направление обучения</label>
+        <select id="field" required>
+          <option value="it">IT / Computer Science</option>
+          <option value="business">Бизнес и экономика</option>
+          <option value="engineering">Инженерия</option>
+          <option value="medicine">Медицина</option>
+          <option value="any">Пока не определился</option>
+        </select>
+
+        <label for="gpa">Средний балл (GPA из 4.0)</label>
+        <input id="gpa" type="number" min="0" max="4"
+               step="0.01" placeholder="Например, 3.5" required>
+
+        <label for="ielts">IELTS (если нет — оставь 0)</label>
+        <input id="ielts" type="number" min="0" max="9"
+               step="0.5" value="0" required>
+
+        <label for="sat">SAT (если нет — оставь 0)</label>
+        <input id="sat" type="number" min="0" max="1600"
+               step="10" value="0" required>
+
+        <label for="funding">Как планируешь оплачивать обучение?</label>
+        <select id="funding" required>
+          <option value="full">Только полный грант</option>
+          <option value="partial">Полный или частичный грант</option>
+          <option value="paid">Рассмотрю платное обучение</option>
+        </select>
+
+        <button class="submit" type="submit">Найти университеты →</button>
+      </form>
+    </section>
+
+    <section class="results" id="results">
+      <div class="results-head">
+        <h2>Рекомендации</h2>
+        <span class="count">Ждём твои данные</span>
+      </div>
+      <div class="university empty">
+        <div style="font-size:42px">🔎</div>
+        <strong>Твой список университетов появится здесь</strong>
+        <p>Заполни форму слева и нажми «Найти университеты».</p>
+      </div>
+    </section>
+  </div>
+
+  <p class="notice">
+    Важно: это демонстрационная система рекомендаций, а не официальная
+    оценка шансов поступления. Данные о программах, грантах и требованиях
+    в каталоге являются предварительными и должны быть проверены на
+    официальных сайтах университетов. GPA разных стран рассчитывается
+    по-разному. Перед подачей документов проверь требования для своего
+    гражданства, языка обучения и года поступления.
+  </p>
+</main>
+
+<footer>UniFinder © 2026 · Make your next step count.</footer>
+
+<script>
+// Демонстрационный каталог. Перед реальным использованием
+// проверь требования, гранты и программы каждого университета.
+const universities = [
+  {
+    name:"Astana IT University",
+    country:"kz", city:"Астана, Казахстан", icon:"💻",
+    fields:["it","business"],
+    ielts:5, sat:0, gpa:2.5,
+    funding:true,
+    description:"Университет с фокусом на IT, цифровые технологии и бизнес.",
+    reason:"Рассмотри требования к выбранной программе и отдельные условия грантов для иностранных абитуриентов.",
+    url:"https://astanait.edu.kz/"
+  },
+  {
+    name:"Nazarbayev University",
+    country:"kz", city:"Астана, Казахстан", icon:"🏛️",
+    fields:["it","business","engineering","medicine"],
+    ielts:6.5, sat:0, gpa:3,
+    funding:true,
+    description:"Исследовательский университет с англоязычными программами.",
+    reason:"Проверь правила приёма для иностранных граждан: требования и доступные виды финансовой поддержки могут отличаться.",
+    url:"https://nu.edu.kz/"
+  },
+  {
+    name:"L.N. Gumilyov Eurasian National University",
+    country:"kz", city:"Астана, Казахстан", icon:"🎓",
+    fields:["it","business","engineering"],
+    ielts:0, sat:0, gpa:2,
+    funding:true,
+    description:"Крупный многопрофильный университет в Астане.",
+    reason:"Уточни требования выбранной программы и возможность получения финансирования иностранными студентами.",
+    url:"https://enu.kz/"
+  },
+  {
+    name:"Tashkent University of Information Technologies",
+    country:"uz", city:"Ташкент, Узбекистан", icon:"🖥️",
+    fields:["it","engineering"],
+    ielts:0, sat:0, gpa:2,
+    funding:true,
+    description:"Университет с программами в сфере информационных технологий и связи.",
+    reason:"Узнай, какие вступительные испытания и виды финансирования доступны именно тебе.",
+    url:"https://tuit.uz/"
+  },
+  {
+    name:"Westminster International University in Tashkent",
+    country:"uz", city:"Ташкент, Узбекистан", icon:"🌍",
+    fields:["it","business"],
+    ielts:6, sat:0, gpa:2.5,
+    funding:true,
+    description:"Международная образовательная среда и программы на английском языке.",
+    reason:"Проверь актуальные условия поступления, стоимость и доступные стипендии.",
+    url:"https://www.wiut.uz/"
+  },
+  {
+    name:"Middle East Technical University",
+    country:"tr", city:"Анкара, Турция", icon:"🔬",
+    fields:["it","engineering","business"],
+    ielts:0, sat:0, gpa:3,
+    funding:true,
+    description:"Университет с сильными направлениями инженерии и естественных наук.",
+    reason:"Уточни действующие экзамены, языковые требования и условия стипендий для иностранных абитуриентов.",
+    url:"https://www.metu.edu.tr/"
+  },
+  {
+    name:"Universiti Malaya",
+    country:"my", city:"Куала-Лумпур, Малайзия", icon:"🌴",
+    fields:["it","business","engineering","medicine"],
+    ielts:5.5, sat:0, gpa:3,
+    funding:true,
+    description:"Многопрофильный университет с программами для международных студентов.",
+    reason:"Требования различаются по программе; проверь признание школьного аттестата и доступность стипендий.",
+    url:"https://www.um.edu.my/"
+  }
+];
+
+const countryNames = {
+  kz:"Казахстан", uz:"Узбекистан",
+  tr:"Турция", my:"Малайзия"
+};
+
+const fieldNames = {
+  it:"IT / Computer Science",
+  business:"Бизнес и экономика",
+  engineering:"Инженерия",
+  medicine:"Медицина",
+  any:"Разные направления"
+};
+
+const form = document.getElementById("studentForm");
+const results = document.getElementById("results");
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const student = {
+    citizenship:document.getElementById("country").value,
+    destination:document.getElementById("destination").value,
+    field:document.getElementById("field").value,
+    gpa:Number(document.getElementById("gpa").value),
+    ielts:Number(document.getElementById("ielts").value),
+    sat:Number(document.getElementById("sat").value),
+    funding:document.getElementById("funding").value
+  };
+
+  if (student.gpa < 0 || student.gpa > 4 ||
+      student.ielts < 0 || student.ielts > 9 ||
+      student.sat < 0 || student.sat > 1600) {
+    alert("Проверь введённые значения.");
+    return;
   }
 
-  // Gradient defs container
-  const defs = mkEl('defs', {}, svg);
+  let matches = universities
+    .filter(u => student.destination === "any" ||
+                 u.country === student.destination)
+    .filter(u => student.field === "any" ||
+                 u.fields.includes(student.field))
+    .map(u => {
+      let score = 35;
+      const reasons = [];
 
-  // ── Stars ──────────────────────────────────────────────────────────────────
-  const STAR_COLORS = ['#ffffff', '#e8f8ff', '#5eead4', '#5eead4', '#a78bfa', '#ffb347'];
+      if (student.gpa >= u.gpa) {
+        score += 20;
+        reasons.push("Введённый GPA достигает демонстрационного ориентира каталога.");
+      } else {
+        score += 5;
+        reasons.push("Сравни свой GPA с официальными требованиями программы.");
+      }
 
-  const LAYERS = [
-    { id: 'stars-slow', count: 40, rMin: 0.5, rMax: 1.2, drift: 5,  durMin: 20, durMax: 30 },
-    { id: 'stars-mid',  count: 50, rMin: 0.8, rMax: 1.8, drift: 10, durMin: 10, durMax: 15 },
-    { id: 'stars-fast', count: 30, rMin: 1.2, rMax: 2.5, drift: 20, durMin: 5,  durMax: 8  },
-  ];
+      if (u.ielts === 0) {
+        score += 8;
+        reasons.push("В каталоге не задан порог IELTS; это не означает, что он не требуется.");
+      } else if (student.ielts >= u.ielts) {
+        score += 15;
+        reasons.push("IELTS соответствует условному ориентиру каталога.");
+      } else {
+        score -= 5;
+        reasons.push("Проверь языковые требования: текущего IELTS может быть недостаточно.");
+      }
 
-  const starsG = mkEl('g', { id: 'stars' }, svg);
-  LAYERS.forEach(layer => {
-    const g = mkEl('g', { id: layer.id }, starsG);
-    for (let i = 0; i < layer.count; i++) {
-      mkEl('circle', {
-        cx:      r(0, vw).toFixed(1),
-        cy:      r(0, vh).toFixed(1),
-        r:       r(layer.rMin, layer.rMax).toFixed(2),
-        fill:    pick(STAR_COLORS),
-        opacity: r(0.4, 1.0).toFixed(2),
-      }, g);
+      if (student.sat >= 1200) {
+        score += 5;
+        reasons.push("Указан результат SAT; проверь, учитывает ли его программа.");
+      }
+
+      if (student.funding === "full" && !u.funding) {
+        score -= 30;
+      }
+
+      // Для гранта нельзя судить только по тестовым баллам.
+      // Доступность финансирования проверяется отдельно.
+      if (student.funding === "full") {
+        reasons.push("Полный грант не подтверждён: проверь доступность для своего гражданства.");
+      } else if (student.funding === "partial") {
+        reasons.push("Изучи стипендии, скидки и другие варианты финансирования.");
+      } else {
+        reasons.push("Сравни полную стоимость обучения и проживания.");
+      }
+
+      score = Math.max(10, Math.min(95, score));
+
+      return {...u, score, reasons};
+    })
+    .sort((a,b) => b.score - a.score);
+
+  renderResults(matches, student);
+});
+
+function renderResults(matches, student) {
+  results.replaceChildren();
+
+  const header = document.createElement("div");
+  header.className = "results-head";
+
+  const title = document.createElement("h2");
+  title.textContent = "Рекомендуемые университеты";
+
+  const count = document.createElement("span");
+  count.className = "count";
+  count.textContent = `Найдено: ${matches.length}`;
+
+  header.append(title,count);
+  results.append(header);
+
+  if (!matches.length) {
+    const empty = document.createElement("div");
+    empty.className = "university empty";
+    empty.textContent = "В каталоге пока нет совпадений. Попробуй выбрать другое направление или страну.";
+    results.append(empty);
+    return;
+  }
+
+  matches.forEach(u => {
+    const card = document.createElement("article");
+    card.className = "university";
+
+    const top = document.createElement("div");
+    top.className = "uni-top";
+
+    const icon = document.createElement("div");
+    icon.className = "uni-icon";
+    icon.textContent = u.icon;
+
+    const details = document.createElement("div");
+    details.style.flex = "1";
+
+    const name = document.createElement("div");
+    name.className = "uni-title";
+    name.textContent = u.name;
+
+    const location = document.createElement("div");
+    location.className = "uni-location";
+    location.textContent = `${countryNames[u.country]} · ${u.city}`;
+
+    details.append(name,location);
+    top.append(icon,details);
+    card.append(top);
+
+    const tags = document.createElement("div");
+    const fieldTag = document.createElement("span");
+    fieldTag.className = "tag";
+    fieldTag.textContent = fieldNames[student.field];
+    tags.append(fieldTag);
+
+    if (u.ielts > 0) {
+      const langTag = document.createElement("span");
+      langTag.className = "tag";
+      langTag.textContent = `Ориентир IELTS: ${u.ielts}`;
+      tags.append(langTag);
     }
-  });
 
-  // ── Nebulas ────────────────────────────────────────────────────────────────
-  const NEBULA_DEFS = [
-    { x: vw * 0.15, y: vh * 0.20, rx: 280, ry: 180, color: '#5eead4', rot: -20 },
-    { x: vw * 0.80, y: vh * 0.10, rx: 320, ry: 200, color: '#7c3aed', rot:  15 },
-    { x: vw * 0.60, y: vh * 0.70, rx: 260, ry: 160, color: '#ec4899', rot:  30 },
-    { x: vw * 0.10, y: vh * 0.75, rx: 300, ry: 190, color: '#6366f1', rot: -10 },
-    { x: vw * 0.90, y: vh * 0.50, rx: 240, ry: 150, color: '#0ea5e9', rot:  25 },
-    { x: vw * 0.45, y: vh * 0.40, rx: 350, ry: 220, color: '#8b5cf6', rot:   5 },
-  ];
+    card.append(tags);
 
-  const nebulaG = mkEl('g', { id: 'nebulas' }, svg);
-  NEBULA_DEFS.forEach((cfg, i) => {
-    const gid  = `ng${i}`;
-    const grad = mkEl('radialGradient', { id: gid, cx: '50%', cy: '50%', r: '50%' }, defs);
-    mkEl('stop', { offset: '0%',   'stop-color': cfg.color, 'stop-opacity': '0.18' }, grad);
-    mkEl('stop', { offset: '100%', 'stop-color': cfg.color, 'stop-opacity': '0'    }, grad);
-    mkEl('ellipse', {
-      cx:      cfg.x.toFixed(1),
-      cy:      cfg.y.toFixed(1),
-      rx:      cfg.rx,
-      ry:      cfg.ry,
-      fill:    `url(#${gid})`,
-      opacity: r(0.06, 0.15).toFixed(3),
-    }, nebulaG);
-  });
+    const desc = document.createElement("p");
+    desc.className = "uni-description";
+    desc.textContent = u.description;
+    card.append(desc);
 
-  // ── Shooting star pool ─────────────────────────────────────────────────────
-  const shootersG = mkEl('g', { id: 'shooters' }, svg);
-  const POOL = Array.from({ length: 4 }, () =>
-    mkEl('line', {
-      x1: -200, y1: -200, x2: -100, y2: -100,
-      stroke: '#5eead4',
-      'stroke-width':   r(1, 2).toFixed(1),
-      'stroke-linecap': 'round',
-      'stroke-dasharray': '80 300',
-      opacity: 0,
-    }, shootersG)
-  );
+    const matchLabel = document.createElement("div");
+    matchLabel.className = "match-label";
 
-  // ── Reduced motion guard ───────────────────────────────────────────────────
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const matchText = document.createElement("span");
+    matchText.textContent = "Соответствие введённым данным";
 
-  // ── GSAP: star drift + twinkle ─────────────────────────────────────────────
-  LAYERS.forEach(layer => {
-    document.querySelectorAll(`#${layer.id} circle`).forEach(star => {
-      gsap.to(star, {
-        y: r(layer.drift * 0.5, layer.drift),
-        x: r(-5, 5),
-        duration: r(layer.durMin, layer.durMax),
-        repeat: -1, yoyo: true,
-        ease: 'sine.inOut',
-        delay: r(0, layer.durMax),
-      });
-      gsap.to(star, {
-        opacity: r(0.3, 1.0),
-        duration: r(2, 5),
-        repeat: -1, yoyo: true,
-        ease: 'sine.inOut',
-        delay: r(0, 5),
-      });
+    const percentage = document.createElement("strong");
+    percentage.textContent = `${u.score}%`;
+
+    matchLabel.append(matchText,percentage);
+    card.append(matchLabel);
+
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    const fill = document.createElement("div");
+    fill.style.width = `${u.score}%`;
+    bar.append(fill);
+    card.append(bar);
+
+    const why = document.createElement("div");
+    why.className = "why";
+
+    const whyTitle = document.createElement("strong");
+    whyTitle.textContent = "Что проверить";
+    why.append(whyTitle);
+
+    const list = document.createElement("ul");
+    u.reasons.forEach(reason => {
+      const item = document.createElement("li");
+      item.textContent = reason;
+      list.append(item);
     });
+    const reason = document.createElement("p");
+    reason.textContent = u.reason;
+    list.append(reason);
+    why.append(list);
+    card.append(why);
+
+    const link = document.createElement("a");
+    link.href = u.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Официальный сайт университета ↗";
+    link.style.cssText =
+      "display:inline-block;margin-top:17px;color:#5556d9;font-weight:700;font-size:14px";
+    card.append(link);
+
+    results.append(card);
   });
-
-  // ── GSAP: nebula setup + pulse ─────────────────────────────────────────────
-  document.querySelectorAll('#nebulas ellipse').forEach((el, i) => {
-    const origin = `${NEBULA_DEFS[i].x.toFixed(1)} ${NEBULA_DEFS[i].y.toFixed(1)}`;
-    gsap.set(el, { rotation: NEBULA_DEFS[i].rot, svgOrigin: origin });
-    gsap.to(el, {
-      opacity:   r(0.12, 0.18),
-      scale:     r(1.05, 1.15),
-      rotation:  `+=${r(-15, 15).toFixed(1)}`,
-      svgOrigin: origin,
-      duration:  r(8, 14),
-      repeat: -1, yoyo: true,
-      ease: 'sine.inOut',
-      delay: r(0, 8),
-    });
-  });
-
-  // ── GSAP: shooting stars ───────────────────────────────────────────────────
-  let idx = 0;
-
-  function shoot() {
-    const line = POOL[idx % POOL.length];
-    idx++;
-
-    const x1  = r(vw * 0.3, vw * 1.1);
-    const y1  = r(-80, vh * 0.25);
-    const len = r(120, 220);
-    const rad = r(30, 60) * Math.PI / 180;
-    const x2  = x1 - len * Math.cos(rad);
-    const y2  = y1 + len * Math.sin(rad);
-
-    gsap.set(line, { attr: { x1, y1, x2: x1, y2: y1 }, opacity: 0 });
-    gsap.timeline({ onComplete: () => gsap.delayedCall(r(3, 6), shoot) })
-      .to(line, { opacity: 1, duration: 0.05 })
-      .to(line, { attr: { x1, y1, x2, y2 }, duration: 0.55, ease: 'power2.in' }, '<')
-      .to(line, { opacity: 0, duration: 0.25 }, '-=0.2');
-  }
-
-  gsap.delayedCall(r(1, 4), shoot);
-})();
+}
+</script>
+</body>
+</html>
