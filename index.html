@@ -1,734 +1,144 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#514fe5">
-<meta name="description" content="UniFinder — подбор университетов и грантов для учеников.">
-<title>UniFinder — найди свой университет</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="author" content="Alikhan">
+<title>UniFinder — университеты под твои баллы</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap">
 <style>
-:root {
-  --bg:#f5f7fc;
-  --card:#fff;
-  --ink:#18213b;
-  --muted:#68738b;
-  --line:#e5e9f2;
-  --primary:#514fe5;
-  --soft:#efefff;
-  --green:#168253;
-  --shadow:0 12px 40px #202b590b;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;background:var(--bg);color:var(--ink);
-  font-family:Inter,Arial,sans-serif;line-height:1.55
-}
-button,input,select{font:inherit}
-a{color:inherit}
-button{cursor:pointer}
-.container{width:min(1160px,calc(100% - 32px));margin:auto}
-header{
-  position:sticky;top:0;z-index:10;background:#ffffffed;
-  backdrop-filter:blur(12px);border-bottom:1px solid var(--line)
-}
-.nav{
-  min-height:72px;display:flex;justify-content:space-between;
-  align-items:center;gap:16px
-}
-.brand{font-size:24px;font-weight:850;text-decoration:none;letter-spacing:-1px}
-.brand span{color:var(--primary)}
-.nav-links{display:flex;gap:22px}
-.nav-links a{font-size:13px;text-decoration:none;color:var(--muted)}
-.btn{
-  display:inline-flex;justify-content:center;align-items:center;gap:8px;
-  border:0;border-radius:12px;background:var(--primary);color:#fff;
-  padding:13px 18px;font-weight:750;text-decoration:none;
-  transition:.2s
-}
-.btn:hover{background:#3d3bc2;transform:translateY(-1px)}
-.btn.light{background:white;color:var(--primary);border:1px solid var(--line)}
-.hero{padding:36px 0 24px}
-.hero-box{
-  overflow:hidden;position:relative;border-radius:28px;padding:clamp(28px,5vw,62px);
-  color:white;background:
-  radial-gradient(circle at 90% 10%,#8885ff,transparent 27%),
-  linear-gradient(125deg,#171b4d,#3937b5 68%,#615ff0)
-}
-.eyebrow{
-  display:inline-block;background:#ffffff20;border:1px solid #ffffff40;
-  border-radius:30px;padding:7px 12px;font-size:12px;font-weight:750
-}
-h1{font-size:clamp(35px,6vw,62px);line-height:1.06;letter-spacing:-2px;margin:20px 0 15px;max-width:760px}
-.hero p{max-width:660px;color:#e2e4ff;line-height:1.8}
-.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:25px}
-.hero-points{display:flex;flex-wrap:wrap;gap:20px;margin-top:25px;font-size:13px;color:#e2e4ff}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0 45px}
-.stat,.panel,.uni-card,.feature,.step{
-  background:var(--card);border:1px solid var(--line);border-radius:19px
-}
-.stat{padding:18px}
-.stat strong{display:block;font-size:20px}
-.stat span{font-size:12px;color:var(--muted)}
-.section-heading{margin-bottom:20px}
-.section-heading h2{font-size:clamp(25px,4vw,34px);letter-spacing:-1px;margin:0}
-.section-heading p{color:var(--muted);margin:6px 0}
-.layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:22px;align-items:start}
-.panel{padding:24px;box-shadow:var(--shadow)}
-.form-panel{position:sticky;top:92px}
-.panel-heading{display:flex;align-items:center;gap:12px}
-.panel-icon{
-  width:44px;height:44px;display:grid;place-items:center;
-  background:var(--soft);border-radius:14px;font-size:22px
-}
-.panel-heading h3{margin:0;font-size:19px}
-.subtext{font-size:13px;color:var(--muted);margin:5px 0 20px}
-.field{margin:16px 0}
-label{display:block;font-size:13px;font-weight:750;margin-bottom:7px}
-label small{font-weight:400;color:var(--muted)}
-input,select{
-  width:100%;min-height:45px;padding:11px 12px;border:1px solid #dfe4ef;
-  border-radius:11px;background:#fff;color:var(--ink)
-}
-input:focus,select:focus{outline:2px solid #a5a4ff;border-color:var(--primary)}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6}
-.progress{height:5px;background:#eeeef9;border-radius:10px;margin:20px 0;overflow:hidden}
-.progress div{height:100%;width:0;background:var(--primary);transition:.2s}
-.form-actions{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:22px}
-.form-actions .btn{width:100%}
-.form-actions .reset{background:#fff;color:var(--ink);border:1px solid var(--line)}
-.results{min-width:0}
-.results-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}
-.results-top h3{font-size:21px;margin:0}
-.results-top p{font-size:12px;color:var(--muted);margin:4px 0}
-.tools{display:flex;gap:8px;align-items:center}
-.tools select,.tools button{font-size:12px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:white}
-.empty{
-  text-align:center;padding:45px 22px;border:1px dashed #cbd2e6;
-  background:#fbfcff;border-radius:20px
-}
-.empty-icon{
-  display:grid;place-items:center;margin:0 auto 15px;width:75px;height:75px;
-  background:var(--soft);border-radius:24px;font-size:34px
-}
-.empty h3{margin:0 0 8px}
-.empty p{max-width:400px;margin:auto;color:var(--muted);font-size:14px}
-.result-list{display:grid;gap:14px}
-.uni-card{padding:20px;box-shadow:var(--shadow);transition:.2s}
-.uni-card:hover{border-color:#c3c2ff;transform:translateY(-2px)}
-.uni-head{display:flex;align-items:flex-start;gap:12px}
-.uni-logo{
-  flex-shrink:0;width:48px;height:48px;display:grid;place-items:center;
-  border-radius:15px;background:var(--soft);font-size:24px
-}
-.uni-main{flex:1;min-width:0}
-.uni-name{font-size:17px;font-weight:850;line-height:1.4}
-.uni-location{font-size:12px;color:var(--muted);margin-top:4px}
-.favorite{
-  padding:7px 10px;background:white;border:1px solid var(--line);
-  border-radius:10px;font-size:18px;color:#777
-}
-.favorite.active{color:#d52d66;background:#fff0f5}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin:13px 0}
-.tag{background:var(--soft);color:#4846b8;padding:5px 8px;border-radius:7px;font-size:11px;font-weight:750}
-.tag.warning{background:#fff3db;color:#916116}
-.uni-desc{font-size:13px;line-height:1.7;color:#5e6880}
-.match-row{display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:750;margin:15px 0 7px}
-.match-row span:last-child{color:var(--primary)}
-.bar{height:6px;background:#ededf8;border-radius:20px;overflow:hidden}
-.bar div{height:100%;background:linear-gradient(90deg,#8885ff,#4946d4);border-radius:20px}
-.why{padding:13px;background:#f8f8ff;border-radius:12px;margin-top:15px;font-size:12px;line-height:1.7;color:#59637a}
-.why strong{display:block;color:var(--ink);margin-bottom:4px}
-.why ul{padding-left:18px;margin:5px 0}
-.uni-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
-.uni-actions a,.uni-actions button{
-  display:inline-block;border:0;border-radius:10px;padding:10px 12px;
-  font-size:12px;font-weight:750;text-decoration:none
-}
-.uni-actions a{background:var(--primary);color:white}
-.uni-actions button{background:white;border:1px solid var(--line);color:var(--ink)}
-.info-section{padding-top:62px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.feature,.step{padding:22px}
-.feature-icon{font-size:27px}
-.feature h3,.step h3{font-size:16px;margin:12px 0 7px}
-.feature p,.step p{font-size:13px;color:var(--muted);line-height:1.7;margin:0}
-.step-num{
-  display:grid;place-items:center;width:33px;height:33px;
-  background:var(--soft);color:var(--primary);border-radius:10px;font-weight:850
-}
-.disclaimer{
-  margin-top:30px;padding:18px 20px;background:#fff9e9;
-  border:1px solid #f2e4bc;border-radius:15px;color:#735c2a;
-  font-size:12px;line-height:1.8
-}
-footer{margin-top:60px;background:#171b3d;color:white;padding:30px 0}
-.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
-footer p{font-size:12px;color:#c6cbe5}
-footer a{color:#e2e4ff}
-.toast{
-  position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);
-  opacity:0;pointer-events:none;background:#202449;color:white;
-  padding:12px 17px;border-radius:12px;z-index:20;font-size:13px;transition:.2s
-}
-.toast.show{opacity:1;transform:translate(-50%,0)}
+:root{--bg:#eef2f0;--card:#fff;--ink:#10231f;--mut:#5b6e69;--line:#d5dfdb;--acc:#0b6e5a;--accs:#dff0ea;--hi:#e9a912;--warn:#8a5a00;--warns:#fdf0cf;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1917;--card:#14262a;--ink:#e6f1ee;--mut:#97aca6;--line:#26403f;--acc:#3fcfa8;--accs:#17342f;--hi:#f2bd3a;--warn:#f2c35c;--warns:#3a2f12;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1917;--card:#14262a;--ink:#e6f1ee;--mut:#97aca6;--line:#26403f;--acc:#3fcfa8;--accs:#17342f;--hi:#f2bd3a;--warn:#f2c35c;--warns:#3a2f12;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Instrument Sans",system-ui,sans-serif}
+h1,h2,h3,.num{font-family:"Bricolage Grotesque","Arial Narrow",sans-serif;letter-spacing:-.02em}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.wrap{width:min(1180px,100% - 28px);margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
+.brand{font:800 24px "Bricolage Grotesque",sans-serif}.brand i{color:var(--acc);font-style:normal}
+.row{display:flex;gap:8px;align-items:center}
+.pill{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:8px 14px;cursor:pointer;font-size:14px}
+.pill[aria-pressed=true]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.hero{padding:26px 0 30px;display:grid;grid-template-columns:1.5fr 1fr;gap:28px;align-items:end}
+.hero h1{font-size:clamp(34px,5.6vw,66px);line-height:1;margin:0;font-weight:800}
+.hero p{color:var(--mut);margin:0;max-width:46ch}
+.live{font-size:14px;color:var(--mut)}.live b{display:block;font:800 64px/1 "Bricolage Grotesque",sans-serif;color:var(--acc)}
+.layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:22px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+.panel h2{font-size:20px;margin:0 0 4px}.sub{font-size:13px;color:var(--mut);margin:0 0 14px}
+.f{margin:0 0 14px}.f label{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:5px}
+.f label output{color:var(--acc);font-weight:700}
+select{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+input[type=range]{width:100%;accent-color:var(--acc);min-height:30px}
+.hint{font-size:12px;color:var(--mut);margin:2px 0 0}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.bar h2{margin:0;font-size:24px}
+.bar select{width:auto;min-height:38px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:14px;display:grid;grid-template-columns:96px 1fr;gap:18px}
+.ring{--p:0;width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--hi) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center}
+.ring span{width:76px;height:76px;border-radius:50%;background:var(--card);display:grid;place-items:center;font:800 28px "Bricolage Grotesque",sans-serif}
+.card h3{margin:0;font-size:20px;line-height:1.2}.loc{font-size:13px;color:var(--mut)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--accs);color:var(--acc)}
+.chip.amb{background:var(--warns);color:var(--warn)}
+.parts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.parts div{font-size:12px;color:var(--mut)}
+.parts i{display:block;height:6px;border-radius:9px;background:var(--line);margin-top:4px;overflow:hidden}
+.parts i s{display:block;height:100%;background:var(--acc)}
+.notes{margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--mut)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.acts a,.acts button{border-radius:10px;padding:9px 13px;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--bg);cursor:pointer;text-decoration:none}
+.acts a{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.acts [aria-pressed=true]{background:var(--accs);color:var(--acc);border-color:var(--acc)}
+.empty{border:2px dashed var(--line);border-radius:18px;padding:40px 22px;text-align:center;color:var(--mut)}
+.empty h3{color:var(--ink);margin:0 0 6px;font-size:22px}
+.note{margin:26px 0 14px;padding:16px 18px;border-radius:14px;background:var(--warns);color:var(--warn);font-size:13px}
+.tray{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);display:flex;justify-content:center;gap:12px;align-items:center;flex-wrap:wrap;z-index:5}
+.tray button{border:0;border-radius:10px;padding:9px 14px;font-weight:700;cursor:pointer;background:var(--hi);color:#10231f}
+dialog{width:min(880px,calc(100% - 20px));border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);padding:20px}
+dialog::backdrop{background:#000a}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--mut);font-weight:600;width:130px}
+@property --p{syntax:"<number>";inherits:false;initial-value:0}
+body{background:radial-gradient(900px 520px at 88% -6%,color-mix(in srgb,var(--acc) 24%,transparent),transparent 62%),radial-gradient(720px 420px at -6% 8%,color-mix(in srgb,var(--hi) 20%,transparent),transparent 62%),var(--bg);background-attachment:fixed}
+.top{position:sticky;top:8px;z-index:6;margin-top:10px;padding:10px 12px 10px 18px;border:1px solid var(--line);border-radius:99px;background:color-mix(in srgb,var(--card) 70%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 30px -18px #0007}
+.hero{position:relative;isolation:isolate}
+.hero h1{background:linear-gradient(115deg,var(--ink) 35%,var(--acc));-webkit-background-clip:text;background-clip:text;color:transparent}
+.orbs{position:absolute;inset:-40px 0 0;z-index:-1;pointer-events:none;overflow:hidden}
+.orbs i{position:absolute;border-radius:50%;filter:blur(46px);opacity:.55;animation:drift 16s ease-in-out infinite alternate}
+.orbs i:nth-child(1){width:260px;height:260px;right:6%;top:0;background:var(--acc)}
+.orbs i:nth-child(2){width:200px;height:200px;right:26%;top:90px;background:var(--hi);animation-delay:-6s}
+@keyframes drift{to{transform:translate(-40px,34px) scale(1.15)}}
+.live b{background:linear-gradient(120deg,var(--acc),var(--hi));-webkit-background-clip:text;background-clip:text;color:transparent}
+.panel{background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 24px 50px -34px #0008}
+.card{border-radius:22px;box-shadow:0 22px 44px -32px #0009;transition:transform .25s,border-color .25s,box-shadow .25s}
+.card:hover{transform:translateY(-3px);border-color:var(--acc);box-shadow:0 28px 50px -30px var(--acc)}
+.ring{animation:fill .9s cubic-bezier(.2,.8,.2,1)}
+@keyframes fill{from{--p:0}}
+.acts a{box-shadow:0 8px 20px -10px var(--acc)}
+.foot{margin:10px 0 80px;padding:20px 22px;border:1px solid var(--line);border-radius:22px;background:color-mix(in srgb,var(--card) 75%,transparent);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.by{display:flex;align-items:center;gap:14px}
+.logo{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font:800 22px "Bricolage Grotesque",sans-serif;color:#10231f;background:linear-gradient(135deg,var(--hi),var(--acc))}
+.by b{display:block;font:700 18px "Bricolage Grotesque",sans-serif}.by small{color:var(--mut);font-size:13px}
+.foot a{color:var(--acc);font-weight:600;text-decoration:none}
+@media(prefers-reduced-motion:reduce){.orbs i,.ring{animation:none}}
 [hidden]{display:none!important}
-@media(max-width:900px){
-  .layout{grid-template-columns:1fr}
-  .form-panel{position:static}
-  .nav-links{display:none}
-}
-@media(max-width:600px){
-  .container{width:calc(100% - 24px)}
-  .nav{min-height:64px}
-  .brand{font-size:21px}
-  .hero{padding-top:20px}
-  .hero-box{padding:25px 20px;border-radius:22px}
-  h1{letter-spacing:-1.3px}
-  .stats{gap:8px;margin-bottom:32px}
-  .stat{padding:12px 10px}
-  .stat strong{font-size:16px}
-  .stat span{font-size:10px}
-  .panel{padding:17px}
-  .grid-3{grid-template-columns:1fr}
-  .tools{width:100%}
-  .tools select{flex:1}
-  .uni-card{padding:15px}
-  .uni-name{font-size:15px}
-}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+@media(max-width:900px){.layout,.hero{grid-template-columns:1fr}.panel{position:static;max-height:none}}
+@media(max-width:560px){.card{grid-template-columns:1fr}.parts{grid-template-columns:repeat(2,1fr)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<header>
-  <div class="container nav">
-    <a class="brand" href="#">Uni<span>Finder.</span></a>
-    <nav class="nav-links">
-      <a href="#matcher">Подбор вузов</a>
-      <a href="#how">Как работает</a>
-      <a href="#features">Возможности</a>
-    </nav>
-    <a class="btn" href="#matcher">Начать подбор ↗</a>
-  </div>
-</header>
+<div class="wrap" id="top">
+<div class="top"><div class="brand">Uni<i>Finder</i></div>
+<div class="row"><button class="pill" id="onlySaved" aria-pressed="false">♡ Избранное: <span id="savedN">0</span></button><button class="pill" id="theme" aria-label="Сменить тему">◐</button></div></div>
+
+<section class="hero"><div class="orbs" aria-hidden="true"><i></i><i></i></div>
+<div><h1>Куда тебя реально возьмут и сколько это будет стоить?</h1></div>
+<div><p>Двигай ползунки: список обновляется сразу. Каждое совпадение разобрано на оценки, язык, финансирование и профиль.</p><div class="live" style="margin-top:14px"><b id="liveN">0</b>университетов подходят под фильтры</div></div>
+</section>
+
+<div class="layout">
+<form class="panel" id="f" onsubmit="return false">
+<h2>Твой профиль</h2><p class="sub">Сохраняется в этом браузере.</p>
+<div class="f"><label for="dest">Страна обучения</label><select id="dest"><option value="any">Любая</option><option value="kz">Казахстан</option><option value="uz">Узбекистан</option><option value="tr">Турция</option><option value="my">Малайзия</option></select></div>
+<div class="f"><label for="field">Направление</label><select id="field"><option value="it">IT и Computer Science</option><option value="business">Бизнес и экономика</option><option value="engineering">Инженерия</option><option value="medicine">Медицина</option><option value="arts">Гуманитарные науки</option><option value="any">Пока не выбрал</option></select></div>
+<div class="f"><label for="degree">Уровень</label><select id="degree"><option value="b">Бакалавриат</option><option value="f">Подготовительная программа</option></select></div>
+<div class="f"><label for="lang">Язык обучения</label><select id="lang"><option value="any">Любой</option><option value="en">Английский</option><option value="ru">Русский</option><option value="local">Местный</option></select></div>
+<div class="f"><label for="fund">Финансирование</label><select id="fund"><option value="full">Только полный грант</option><option value="partial">Грант или скидка</option><option value="paid">Готов платить</option></select></div>
+<div class="f"><label for="gpa">GPA <output id="gpaO"></output></label><input type="range" id="gpa" min="0" max="4" step="0.05"></div>
+<div class="f"><label for="ielts">IELTS <output id="ieltsO"></output></label><input type="range" id="ielts" min="0" max="9" step="0.5"><p class="hint">0 — экзамена нет.</p></div>
+<div class="f"><label for="sat">SAT <output id="satO"></output></label><input type="range" id="sat" min="0" max="1600" step="10"><p class="hint">0 — экзамена нет.</p></div>
+<button class="pill" type="button" id="reset" style="width:100%">Сбросить профиль</button>
+</form>
 
 <main>
-<section class="hero container">
-  <div class="hero-box">
-    <div class="eyebrow">✦ Твой образовательный маршрут</div>
-    <h1>Найди университет, который подходит именно тебе.</h1>
-    <p>Укажи свои результаты, желаемую страну и специальность. Изучи рекомендуемые университеты, сравни варианты и проверь официальные требования к поступлению и финансированию.</p>
-    <div class="hero-actions">
-      <a class="btn" href="#matcher">Подобрать университеты →</a>
-      <a class="btn light" href="#how">Как это работает</a>
-    </div>
-    <div class="hero-points">
-      <span>✓ Бесплатный подбор</span>
-      <span>✓ Пояснения к результатам</span>
-      <span>✓ Ссылки на университеты</span>
-    </div>
-  </div>
-  <div class="stats">
-    <div class="stat"><strong>Персонально</strong><span>С учётом твоих предпочтений</span></div>
-    <div class="stat"><strong>Наглядно</strong><span>Результаты в удобных карточках</span></div>
-    <div class="stat"><strong>Практично</strong><span>Переход к официальным сайтам</span></div>
-  </div>
-</section>
-
-<section class="container" id="matcher">
-  <div class="section-heading">
-    <h2>Твой подбор университетов</h2>
-    <p>Заполни профиль и получи список вариантов.</p>
-  </div>
-  <div class="layout">
-    <form class="panel form-panel" id="studentForm">
-      <div class="panel-heading">
-        <div class="panel-icon">🎯</div>
-        <div><h3>Профиль ученика</h3><small>Персональные критерии</small></div>
-      </div>
-      <p class="subtext">Укажи свои данные. Необязательно иметь все экзамены.</p>
-      <div class="progress"><div id="progressBar"></div></div>
-
-      <div class="field">
-        <label for="citizenship">Гражданство</label>
-        <select id="citizenship" required>
-          <option value="uz">Узбекистан</option>
-          <option value="kz">Казахстан</option>
-          <option value="other">Другая страна</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="destination">Страна обучения</label>
-        <select id="destination" required>
-          <option value="any">Любая страна</option>
-          <option value="kz">Казахстан</option>
-          <option value="uz">Узбекистан</option>
-          <option value="tr">Турция</option>
-          <option value="my">Малайзия</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="field">Направление</label>
-        <select id="field" required>
-          <option value="it">IT / Computer Science</option>
-          <option value="business">Бизнес и экономика</option>
-          <option value="engineering">Инженерия</option>
-          <option value="medicine">Медицина</option>
-          <option value="arts">Гуманитарные науки</option>
-          <option value="any">Пока не определился</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="degree">Уровень обучения</label>
-        <select id="degree" required>
-          <option value="bachelor">Бакалавриат после школы</option>
-          <option value="foundation">Подготовительная программа</option>
-        </select>
-      </div>
-
-      <div class="two-col">
-        <div class="field">
-          <label for="gpa">GPA <small>из 4.0</small></label>
-          <input id="gpa" type="number" min="0" max="4" step="0.01" placeholder="3.50" required>
-          <div class="hint">Используй свою официальную шкалу GPA.</div>
-        </div>
-        <div class="field">
-          <label for="ielts">IELTS <small>0–9</small></label>
-          <input id="ielts" type="number" min="0" max="9" step="0.5" value="0" required>
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="sat">SAT <small>0, если нет</small></label>
-        <input id="sat" type="number" min="0" max="1600" step="10" value="0" required>
-      </div>
-
-      <div class="field">
-        <label for="funding">Финансирование</label>
-        <select id="funding" required>
-          <option value="full">Только полный грант</option>
-          <option value="partial">Полный или частичный грант</option>
-          <option value="paid">Рассмотрю платное обучение</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="language">Язык обучения</label>
-        <select id="language" required>
-          <option value="any">Любой язык</option>
-          <option value="en">Английский</option>
-          <option value="ru">Русский</option>
-          <option value="local">Местный язык</option>
-        </select>
-      </div>
-
-      <div class="form-actions">
-        <button class="btn" type="submit">Найти варианты →</button>
-        <button class="btn reset" type="reset" aria-label="Очистить форму">↺</button>
-      </div>
-      <p class="hint">В этой версии данные обрабатываются локально в браузере.</p>
-    </form>
-
-    <section class="results" aria-live="polite">
-      <div class="results-top">
-        <div>
-          <h3 id="resultsTitle">Твои рекомендации</h3>
-          <p id="resultsSubtitle">Заполни профиль, чтобы увидеть варианты.</p>
-        </div>
-        <div class="tools">
-          <select id="sortBy" aria-label="Сортировка">
-            <option value="match">Сначала совпадения</option>
-            <option value="name">По названию</option>
-          </select>
-          <button id="savedToggle" type="button">♡ Избранное</button>
-        </div>
-      </div>
-
-      <div class="empty" id="emptyState">
-        <div class="empty-icon">🎓</div>
-        <h3>Твой следующий шаг начинается здесь</h3>
-        <p>Добавь результаты и предпочтения. Мы покажем варианты из демонстрационного каталога и объясним, что нужно проверить перед поступлением.</p>
-      </div>
-      <div class="result-list" id="resultList"></div>
-    </section>
-  </div>
-</section>
-
-<section class="info-section container" id="how">
-  <div class="section-heading">
-    <h2>Как это работает</h2>
-    <p>Три шага к исследованию своих возможностей.</p>
-  </div>
-  <div class="grid-3">
-    <article class="step"><div class="step-num">1</div><h3>Заполни профиль</h3><p>Укажи страну, направление, оценки и предпочтения по финансированию.</p></article>
-    <article class="step"><div class="step-num">2</div><h3>Сравни университеты</h3><p>Изучи совпадения, пояснения и ссылки на сайты учебных заведений.</p></article>
-    <article class="step"><div class="step-num">3</div><h3>Проверь условия</h3><p>Уточни дедлайны, экзамены, стоимость и гранты для своего гражданства.</p></article>
-  </div>
-</section>
-
-<section class="info-section container" id="features">
-  <div class="section-heading">
-    <h2>Создано для удобного выбора</h2>
-    <p>Полезные инструменты в одном интерфейсе.</p>
-  </div>
-  <div class="grid-3">
-    <article class="feature"><div class="feature-icon">🧭</div><h3>Персональный подбор</h3><p>Фильтрация по стране, направлению, языку и финансированию.</p></article>
-    <article class="feature"><div class="feature-icon">📊</div><h3>Понятные результаты</h3><p>Условная оценка соответствия и список деталей, которые важно проверить.</p></article>
-    <article class="feature"><div class="feature-icon">🔗</div><h3>Официальные сайты</h3><p>Быстрый переход к университетам для проверки актуальных правил.</p></article>
-  </div>
-  <div class="disclaimer">
-    <strong>Важно.</strong> UniFinder — демонстрационный учебный проект, а не официальная база приёма. Каталог ограничен примерами, проценты соответствия являются условными и не показывают реальную вероятность зачисления или получения гранта. Доступность финансирования зависит от программы, гражданства и правил конкретного года. Проверяй требования на официальных сайтах. Не вводи паспортные данные и другую конфиденциальную информацию.
-  </div>
-</section>
+<div class="bar"><h2 id="title">Рекомендации</h2><select id="sort" aria-label="Сортировка"><option value="score">Сначала лучшее совпадение</option><option value="name">По названию</option></select></div>
+<div id="list" aria-live="polite"></div>
+<div class="note"><b>Важно.</b> Это учебный проект. Каталог — демонстрационный, пороги и наличие грантов указаны ориентировочно, а процент совпадения не равен шансу поступления. Дедлайны, экзамены, стоимость и гранты для твоего гражданства проверяй на официальных сайтах. Не вводи паспортные и другие личные данные.</div>
 </main>
+</div>
 
-<footer>
-  <div class="container footer-inner">
-    <div><strong style="font-size:21px">Uni<span style="color:#aaa8ff">Finder.</span></strong><p>Помогаем исследовать образовательные возможности.</p></div>
-    <div><a href="#matcher">Начать подбор ↑</a><p>© <span id="year"></span> UniFinder · Учебный проект</p></div>
-  </div>
-</footer>
-<div class="toast" id="toast" role="status"></div>
+<footer class="foot"><div class="by"><span class="logo" aria-hidden="true">A</span><div><b>Created by Alikhan</b><small>UniFinder · учебный проект · <span id="yr"></span></small></div></div><a href="#top">Наверх ↑</a></footer>
+</div>
+
+<div class="tray" id="tray" hidden><span id="trayT"></span><button id="cmpBtn">Сравнить</button><button id="cmpClr" style="background:transparent;color:inherit;border:1px solid currentColor">Очистить</button></div>
+<dialog id="dlg"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Сравнение</h2><button class="pill" id="dlgX">Закрыть</button></div><div class="scroll" id="cmpT"></div></dialog>
 
 <script>
 "use strict";
-
-// Демонстрационный каталог. Перед реальным использованием проверь
-// официальные требования и доступность грантов для иностранных абитуриентов.
-const universities = [
-  {
-    id:"aitu", name:"Astana IT University", country:"kz",
-    city:"Астана, Казахстан", icon:"💻",
-    fields:["it","business"], degrees:["bachelor","foundation"],
-    ielts:5, gpa:2.5, languages:["en"],
-    funding:["full","partial"],
-    desc:"Университет с фокусом на IT, цифровые технологии и бизнес.",
-    check:"Проверь правила для иностранных абитуриентов, выбранную программу и условия грантов.",
-    url:"https://astanait.edu.kz/"
-  },
-  {
-    id:"nu", name:"Nazarbayev University", country:"kz",
-    city:"Астана, Казахстан", icon:"🏛️",
-    fields:["it","business","engineering","medicine"],
-    degrees:["bachelor"], ielts:6.5, gpa:3,
-    languages:["en"], funding:["full","partial"],
-    desc:"Исследовательский университет с англоязычными программами.",
-    check:"Уточни актуальные требования к тестам, аттестату и финансовой поддержке иностранных студентов.",
-    url:"https://nu.edu.kz/"
-  },
-  {
-    id:"enu", name:"L.N. Gumilyov Eurasian National University",
-    country:"kz", city:"Астана, Казахстан", icon:"🎓",
-    fields:["it","business","engineering","arts"],
-    degrees:["bachelor","foundation"], ielts:0, gpa:2,
-    languages:["en","ru","local"], funding:["full","partial"],
-    desc:"Многопрофильный университет с широким выбором направлений.",
-    check:"Проверь язык выбранной программы, вступительные испытания и правила предоставления грантов иностранцам.",
-    url:"https://enu.kz/"
-  },
-  {
-    id:"tuit", name:"Tashkent University of Information Technologies",
-    country:"uz", city:"Ташкент, Узбекистан", icon:"🖥️",
-    fields:["it","engineering"], degrees:["bachelor","foundation"],
-    ielts:0, gpa:2, languages:["en","ru","local"],
-    funding:["full","partial"],
-    desc:"Университет с направлениями в сфере IT и связи.",
-    check:"Уточни доступные программы, вступительные испытания и виды финансирования для своего статуса.",
-    url:"https://tuit.uz/"
-  },
-  {
-    id:"wiut", name:"Westminster International University in Tashkent",
-    country:"uz", city:"Ташкент, Узбекистан", icon:"🌍",
-    fields:["it","business"], degrees:["bachelor","foundation"],
-    ielts:6, gpa:2.5, languages:["en"],
-    funding:["partial"],
-    desc:"Международная образовательная среда и программы на английском языке.",
-    check:"Проверь актуальные требования, стоимость обучения и условия стипендий.",
-    url:"https://www.wiut.uz/"
-  },
-  {
-    id:"metu", name:"Middle East Technical University",
-    country:"tr", city:"Анкара, Турция", icon:"🔬",
-    fields:["it","engineering","business"], degrees:["bachelor"],
-    ielts:0, gpa:3, languages:["en"],
-    funding:["full","partial"],
-    desc:"Университет с направлениями инженерии, технологий и естественных наук.",
-    check:"Проверь международные правила приёма, принимаемые экзамены, язык и стипендии.",
-    url:"https://www.metu.edu.tr/"
-  },
-  {
-    id:"um", name:"Universiti Malaya", country:"my",
-    city:"Куала-Лумпур, Малайзия", icon:"🌴",
-    fields:["it","business","engineering","medicine"],
-    degrees:["bachelor"], ielts:5.5, gpa:3,
-    languages:["en"], funding:["full","partial"],
-    desc:"Многопрофильный университет с программами для международных студентов.",
-    check:"Проверь требования конкретного курса, признание школьного аттестата и доступность стипендий.",
-    url:"https://www.um.edu.my/"
-  }
-];
-
-const countryNames={kz:"Казахстан",uz:"Узбекистан",tr:"Турция",my:"Малайзия"};
-const fieldNames={
-  it:"IT / Computer Science", business:"Бизнес и экономика",
-  engineering:"Инженерия", medicine:"Медицина",
-  arts:"Гуманитарные науки", any:"Любое направление"
-};
-
-const form=document.getElementById("studentForm");
-const list=document.getElementById("resultList");
-const empty=document.getElementById("emptyState");
-const sortBy=document.getElementById("sortBy");
-const savedToggle=document.getElementById("savedToggle");
-let matches=[];
-let searched=false;
-let onlySaved=false;
-const saved=new Set();
-
-document.getElementById("year").textContent=new Date().getFullYear();
-
-function notify(message){
-  const el=document.getElementById("toast");
-  el.textContent=message;
-  el.classList.add("show");
-  clearTimeout(notify.timer);
-  notify.timer=setTimeout(()=>el.classList.remove("show"),2200);
-}
-
-function el(tag,className,text){
-  const node=document.createElement(tag);
-  if(className)node.className=className;
-  if(text!==undefined)node.textContent=text;
-  return node;
-}
-
-function readStudent(){
-  return {
-    citizenship:document.getElementById("citizenship").value,
-    destination:document.getElementById("destination").value,
-    field:document.getElementById("field").value,
-    degree:document.getElementById("degree").value,
-    gpa:Number(document.getElementById("gpa").value),
-    ielts:Number(document.getElementById("ielts").value),
-    sat:Number(document.getElementById("sat").value),
-    funding:document.getElementById("funding").value,
-    language:document.getElementById("language").value
-  };
-}
-
-function findMatches(s){
-  return universities.filter(u=>
-    (s.destination==="any"||u.country===s.destination)&&
-    (s.field==="any"||u.fields.includes(s.field))&&
-    u.degrees.includes(s.degree)&&
-    (s.language==="any"||u.languages.includes(s.language))&&
-    (s.funding==="paid"||u.funding.includes(s.funding))
-  ).map(u=>{
-    let score=40;
-    const reasons=[];
-
-    if(s.gpa>=u.gpa){
-      score+=18;
-      reasons.push("Введённый GPA достигает условного ориентира каталога.");
-    }else{
-      score+=4;
-      reasons.push("Сравни свой GPA с официальными требованиями программы.");
-    }
-
-    if(u.ielts===0){
-      score+=5;
-      reasons.push("В каталоге не задан порог IELTS. Это не означает, что тест не требуется.");
-    }else if(s.ielts>=u.ielts){
-      score+=15;
-      reasons.push("IELTS достигает условного ориентира каталога.");
-    }else{
-      score-=8;
-      reasons.push("Проверь языковые требования: текущего IELTS может быть недостаточно.");
-    }
-
-    if(s.sat>0){
-      score+=3;
-      reasons.push("Уточни, учитывает ли программа SAT и какой результат требуется.");
-    }
-
-    if(s.funding==="full"){
-      reasons.push("Доступность полного гранта для твоего гражданства не подтверждена.");
-    }else if(s.funding==="partial"){
-      reasons.push("Проверь стипендии, скидки и другие варианты финансирования.");
-    }else{
-      reasons.push("Сравни полную стоимость обучения и проживания.");
-    }
-
-    return {...u,score:Math.max(15,Math.min(92,score)),reasons};
-  });
-}
-
-function render(){
-  list.replaceChildren();
-
-  if(!searched){
-    empty.hidden=false;
-    return;
-  }
-
-  const shown=matches.filter(u=>!onlySaved||saved.has(u.id));
-  shown.sort((a,b)=>sortBy.value==="name"
-    ?a.name.localeCompare(b.name)
-    :b.score-a.score);
-
-  empty.hidden=shown.length>0;
-  empty.replaceChildren();
-
-  if(!shown.length){
-    empty.append(
-      el("div","empty-icon",onlySaved?"♡":"🔎"),
-      el("h3","",onlySaved?"Избранное пока пусто":"Ничего не найдено"),
-      el("p","",onlySaved
-        ?"Нажми на сердечко у университета, чтобы сохранить его."
-        :"Попробуй изменить страну, направление, язык или финансирование.")
-    );
-  }
-
-  document.getElementById("resultsTitle").textContent=
-    onlySaved?"Избранные университеты":"Твои рекомендации";
-  document.getElementById("resultsSubtitle").textContent=
-    `Найдено вариантов: ${shown.length} · демонстрационный каталог`;
-
-  shown.forEach(u=>{
-    const card=el("article","uni-card");
-    const head=el("div","uni-head");
-    head.append(el("div","uni-logo",u.icon));
-
-    const main=el("div","uni-main");
-    main.append(
-      el("div","uni-name",u.name),
-      el("div","uni-location",u.city)
-    );
-
-    const fav=el("button","favorite",saved.has(u.id)?"♥":"♡");
-    fav.type="button";
-    fav.setAttribute("aria-pressed",String(saved.has(u.id)));
-    fav.setAttribute("aria-label","Переключить избранное");
-    fav.addEventListener("click",()=>{
-      if(saved.has(u.id))saved.delete(u.id);
-      else saved.add(u.id);
-      render();
-      notify(saved.has(u.id)?"Добавлено в избранное":"Удалено из избранного");
-    });
-
-    head.append(main,fav);
-    card.append(head);
-
-    const tags=el("div","tags");
-    tags.append(el("span","tag",fieldNames[document.getElementById("field").value]));
-    if(u.ielts)tags.append(el("span","tag",`Ориентир IELTS ${u.ielts}+`));
-    tags.append(el("span","tag warning","Проверить грант"));
-    card.append(tags,el("p","uni-desc",u.desc));
-
-    const matchRow=el("div","match-row");
-    matchRow.append(
-      el("span","","Совпадение по введённым критериям"),
-      el("span","",`${u.score}%`)
-    );
-    card.append(matchRow);
-
-    const bar=el("div","bar");
-    const fill=el("div","");
-    fill.style.width=u.score+"%";
-    bar.append(fill);
-    card.append(bar);
-
-    const why=el("div","why");
-    why.append(el("strong","","Что стоит проверить"));
-    const ul=el("ul","");
-    u.reasons.forEach(reason=>ul.append(el("li","",reason)));
-    ul.append(el("li","",u.check));
-    why.append(ul);
-    card.append(why);
-
-    const actions=el("div","uni-actions");
-    const link=el("a","","Официальный сайт ↗");
-    link.href=u.url;
-    link.target="_blank";
-    link.rel="noopener noreferrer";
-    actions.append(link);
-
-    const copy=el("button","","Скопировать название");
-    copy.type="button";
-    copy.addEventListener("click",()=>{
-      if(navigator.clipboard&&navigator.clipboard.writeText){
-        navigator.clipboard.writeText(u.name)
-          .then(()=>notify("Название скопировано"))
-          .catch(()=>notify(u.name));
-      }else{
-        notify(u.name);
-      }
-    });
-    actions.append(copy);
-    card.append(actions);
-    list.append(card);
-  });
-}
-
-form.addEventListener("input",()=>{
-  const ids=["citizenship","destination","field","degree","gpa","ielts","sat","funding","language"];
-  const filled=ids.filter(id=>document.getElementById(id).value!=="").length;
-  document.getElementById("progressBar").style.width=(filled/ids.length*100)+"%";
-});
-
-form.addEventListener("submit",event=>{
-  event.preventDefault();
-  if(!form.reportValidity())return;
-
-  const s=readStudent();
-  if(s.gpa<0||s.gpa>4||s.ielts<0||s.ielts>9||s.sat<0||s.sat>1600){
-    notify("Проверь введённые баллы.");
-    return;
-  }
-
-  matches=findMatches(s);
-  searched=true;
-  onlySaved=false;
-  savedToggle.textContent="♡ Избранное";
-  render();
-
-  if(window.matchMedia("(max-width:900px)").matches){
-    document.querySelector(".results").scrollIntoView({behavior:"smooth",block:"start"});
-  }
-});
-
-form.addEventListener("reset",()=>{
-  setTimeout(()=>{
-    document.getElementById("progressBar").style.width="0";
-    matches=[];
-    searched=false;
-    onlySaved=false;
-    savedToggle.textContent="♡ Избранное";
-    document.getElementById("resultsTitle").textContent="Твои рекомендации";
-    document.getElementById("resultsSubtitle").textContent="Заполни профиль, чтобы увидеть варианты.";
-    render();
-  },0);
-});
-
-sortBy.addEventListener("change",render);
-
-savedToggle.addEventListener("click",()=>{
-  onlySaved=!onlySaved;
-  savedToggle.textContent=onlySaved?"← Все варианты":"♡ Избранное";
-
-  if(!searched){
-    searched=true;
-    matches=[];
-  }
-  render();
-});
-
-render();
-</script>
-</body>
-</html>
+// [id, название, страна, город, направления, уровни, GPA, IELTS, SAT, языки, финансирование, сайт]
+const RAW=[
+["aitu","Astana IT University","kz","Астана","it,business","b,f",2.5,5,0,"en","full,partial","https://astanait.edu.kz/"],
+["nu","Nazarbayev University","kz","Астана","it,business,engineering,medicine","b",3.3,6.5,1200,"en","full,partial","https://nu.edu.kz/"],
+["enu","Евразийский национальный университет им. Гумилёва","kz","Астана","it,business,engineering,arts","b,f",2,0,0,"en,ru,local","full,partial","https://enu.kz/"],
+["kbtu","Kazakh-British Technical University","kz","Алматы","it,business,engineering","b",3,5.5,0,"en,ru","partial","https://kbtu.edu.kz/"],
+["tuit","Ташкентский университет информационных технологий","uz","Ташкент","it,engineering","b,f",2,0,0,"ru,local,en","full,partial","https://tuit.uz/"],
+["wiut","Westminster International University in Tashkent","uz","Ташкент","it,business","b,f",2.5,6,0,"en","partial","https://www.wiut.uz/"],
+["inha","Inha University in Tashkent","uz","Ташкент","it,business,engineering","b,f",2.5,5.5,0,"en","partial","https://inha.uz/"],
+["metu","Middle East Technical University","tr","Анкара","it,engineering,business","b",3.2,0,1100,"en","full,partial","https://www.metu.edu.tr/"],
+["bilkent","Bilkent University","tr","Анкара","it,engineering,business,arts","b",3.3,6.5,1200,"en","full,partial","https://w3.bilkent.edu.tr/"],
+["itu","Istanbul Technical University","tr","Стамбул","it,engineering,arts","b",2.8,0,0,"en,local","full,partial","https://www.itu.edu.tr
