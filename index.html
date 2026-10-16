@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b1020">
-<meta name="description" content="UniFinder — поиск университетов мира, стипендий и грантов.">
-<title>UniFinder — Find Your University</title>
+<meta name="description" content="UniFinder — каталог университетов мира и поиск возможностей обучения и грантов.">
+<title>UniFinder — Найди свой университет</title>
+
 <style>
 :root {
   --bg:#0b1020;
@@ -31,357 +32,790 @@ body.light {
   --green:#12855f;
   --shadow:0 18px 45px rgba(40,45,100,.08);
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;background:var(--bg);color:var(--text);
+* {box-sizing:border-box}
+html {scroll-behavior:smooth}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
   font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  line-height:1.6;transition:background .3s,color .3s
+  line-height:1.6;
+  transition:background .3s,color .3s;
 }
-button,input,select{font:inherit}
-button{cursor:pointer}
-button:focus-visible,input:focus-visible,select:focus-visible{
-  outline:2px solid var(--cyan);outline-offset:3px
+button,input,select {font:inherit}
+button {cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible {
+  outline:2px solid var(--cyan);
+  outline-offset:3px;
 }
-a{color:inherit;text-decoration:none}
-.background{
+a {color:inherit;text-decoration:none}
+.background {
   position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
   background:
     radial-gradient(ellipse at 10% 5%,rgba(110,70,255,.22),transparent 40%),
     radial-gradient(ellipse at 90% 30%,rgba(20,180,220,.14),transparent 38%),
-    var(--bg)
+    var(--bg);
 }
-.background:after{
+.background:after {
   content:"";position:absolute;inset:0;opacity:.2;
   background-image:linear-gradient(rgba(150,165,255,.08) 1px,transparent 1px),
   linear-gradient(90deg,rgba(150,165,255,.08) 1px,transparent 1px);
   background-size:42px 42px;
-  mask-image:linear-gradient(to bottom,black,transparent 90%)
+  mask-image:linear-gradient(to bottom,black,transparent 90%);
 }
-.orb{
+.orb {
   position:absolute;border-radius:50%;filter:blur(4px);
-  animation:float 15s ease-in-out infinite alternate
+  animation:float 15s ease-in-out infinite alternate;
 }
-.orb.one{width:300px;height:300px;left:-150px;top:15%;background:#7155ff44}
-.orb.two{width:370px;height:370px;right:-200px;top:40%;background:#23c8df30;animation-delay:-5s}
-.orb.three{width:250px;height:250px;left:40%;bottom:-160px;background:#9555ff25;animation-delay:-8s}
-@keyframes float{to{transform:translate(35px,-30px) scale(1.12)}}
-.layout{display:flex;min-height:100vh}
-.sidebar{
+.orb.one {width:300px;height:300px;left:-150px;top:15%;background:#7155ff44}
+.orb.two {width:370px;height:370px;right:-200px;top:40%;background:#23c8df30;animation-delay:-5s}
+.orb.three {width:250px;height:250px;left:40%;bottom:-160px;background:#9555ff25;animation-delay:-8s}
+@keyframes float {to{transform:translate(35px,-30px) scale(1.12)}}
+
+.layout {display:flex;min-height:100vh}
+.sidebar {
   width:235px;position:fixed;inset:0 auto 0 0;z-index:5;
   padding:25px 17px;display:flex;flex-direction:column;
   background:var(--panel);backdrop-filter:blur(20px);
-  border-right:1px solid var(--line)
+  border-right:1px solid var(--line);
 }
-.brand{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:900;padding:4px 8px 35px}
-.brand-icon{
+.brand {display:flex;align-items:center;gap:12px;font-size:22px;font-weight:900;padding:4px 8px 35px}
+.brand-icon {
   display:grid;place-items:center;width:44px;height:44px;border-radius:15px;
   background:linear-gradient(135deg,#a28bff,#5043df);
-  box-shadow:0 8px 25px #7155ff50;font-size:23px
+  box-shadow:0 8px 25px #7155ff50;font-size:23px;
 }
-.brand-name{
+.brand-name {
   background:linear-gradient(90deg,var(--text),#a899ff);
-  -webkit-background-clip:text;background-clip:text;color:transparent
+  -webkit-background-clip:text;background-clip:text;color:transparent;
 }
-.nav-label{font-size:10px;color:var(--muted);letter-spacing:1.5px;padding:0 10px 12px}
-.nav{display:grid;gap:7px}
-.nav button{
+.nav-label {font-size:10px;color:var(--muted);letter-spacing:1.5px;padding:0 10px 12px}
+.nav {display:grid;gap:7px}
+.nav button {
   display:flex;align-items:center;gap:12px;width:100%;padding:12px;
   background:transparent;border:1px solid transparent;border-radius:13px;
-  color:var(--muted);text-align:left;font-size:13px
+  color:var(--muted);text-align:left;font-size:13px;
 }
-.nav button:hover,.nav button.active{
+.nav button:hover,.nav button.active {
   color:var(--text);border-color:#8872ff45;
-  background:linear-gradient(100deg,#8872ff30,#43d7e80b)
+  background:linear-gradient(100deg,#8872ff30,#43d7e80b);
 }
-.nav-icon{font-size:19px;width:22px;text-align:center}
-.nav-count{margin-left:auto;background:var(--purple);color:white;border-radius:20px;padding:1px 7px;font-size:10px}
-.sidebar-bottom{margin-top:auto}
-.quote{padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--panel2)}
-.quote strong{font-size:12px}
-.quote p{font-size:11px;color:var(--muted);margin-bottom:0}
-.sidebar-footer{text-align:center;color:var(--muted);font-size:10px;padding-top:20px}
-.main{margin-left:235px;padding:0 32px 35px;width:calc(100% - 235px);max-width:1750px}
-.topbar{
+.nav-icon {font-size:19px;width:22px;text-align:center}
+.nav-count {margin-left:auto;background:var(--purple);color:white;border-radius:20px;padding:1px 7px;font-size:10px}
+.sidebar-bottom {margin-top:auto}
+.quote {padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--panel2)}
+.quote strong {font-size:12px}
+.quote p {font-size:11px;color:var(--muted);margin-bottom:0}
+.sidebar-footer {text-align:center;color:var(--muted);font-size:10px;padding-top:20px}
+
+.main {margin-left:235px;padding:0 32px 35px;width:calc(100% - 235px);max-width:1750px}
+.topbar {
   min-height:78px;display:flex;align-items:center;justify-content:space-between;
-  gap:14px;border-bottom:1px solid var(--line);margin-bottom:25px
+  gap:14px;border-bottom:1px solid var(--line);margin-bottom:25px;
 }
-.breadcrumb{font-size:12px;color:var(--muted)}
-.top-actions{display:flex;align-items:center;gap:10px}
-.search-top{position:relative}
-.search-top span{position:absolute;left:12px;top:8px;color:var(--muted)}
-.search-top input{
+.breadcrumb {font-size:12px;color:var(--muted)}
+.top-actions {display:flex;align-items:center;gap:10px}
+.search-top {position:relative}
+.search-top span {position:absolute;left:12px;top:8px;color:var(--muted)}
+.search-top input {
   width:230px;padding:10px 12px 10px 34px;border:1px solid var(--line);
-  border-radius:12px;background:var(--panel);color:var(--text);font-size:12px
+  border-radius:12px;background:var(--panel);color:var(--text);font-size:12px;
 }
-.icon-button{
+.icon-button {
   width:40px;height:40px;border:1px solid var(--line);border-radius:12px;
-  background:var(--panel);color:var(--text)
+  background:var(--panel);color:var(--text);
 }
-.avatar{display:grid;place-items:center;width:37px;height:37px;border-radius:50%;background:linear-gradient(135deg,#9c7cff,#29c7d8);font-weight:900;color:white}
-.profile-mini{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700}
-.hero{
+.avatar {display:grid;place-items:center;width:37px;height:37px;border-radius:50%;background:linear-gradient(135deg,#9c7cff,#29c7d8);font-weight:900;color:white}
+.profile-mini {display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700}
+
+.hero {
   position:relative;overflow:hidden;padding:34px;border:1px solid var(--line);
   border-radius:27px;margin-bottom:25px;box-shadow:var(--shadow);
-  background:radial-gradient(ellipse at 90% 5%,#7661ff40,transparent 42%),linear-gradient(115deg,#20264aee,#112e43d9)
+  background:radial-gradient(ellipse at 90% 5%,#7661ff40,transparent 42%),
+  linear-gradient(115deg,#20264aee,#112e43d9);
 }
-body.light .hero{background:radial-gradient(ellipse at 90% 5%,#7661ff24,transparent 42%),linear-gradient(115deg,#fff,#e8f5ff)}
-.hero:after{content:"✦";position:absolute;right:7%;top:-20px;font-size:180px;color:#a99aff16;pointer-events:none}
-.eyebrow{
+body.light .hero {background:radial-gradient(ellipse at 90% 5%,#7661ff24,transparent 42%),linear-gradient(115deg,#fff,#e8f5ff)}
+.hero:after {
+  content:"✦";position:absolute;right:7%;top:-20px;font-size:180px;
+  color:#a99aff16;pointer-events:none;
+}
+.eyebrow {
   display:inline-block;padding:6px 11px;border:1px solid #9d88ff55;
   border-radius:30px;background:#8872ff19;color:#c6baff;
-  font-size:10px;font-weight:800;letter-spacing:1px
+  font-size:10px;font-weight:800;letter-spacing:1px;
 }
-.hero h1{font-size:clamp(31px,4vw,48px);line-height:1.13;letter-spacing:-1.6px;max-width:700px;margin:19px 0 13px}
-.gradient-text{background:linear-gradient(100deg,#a896ff,#4bd9e9);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{max-width:620px;color:var(--muted);font-size:14px;line-height:1.8}
-.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
-.btn{
+.hero h1 {font-size:clamp(31px,4vw,48px);line-height:1.13;letter-spacing:-1.6px;max-width:700px;margin:19px 0 13px}
+.gradient-text {background:linear-gradient(100deg,#a896ff,#4bd9e9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p {max-width:620px;color:var(--muted);font-size:14px;line-height:1.8}
+.hero-actions {display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.btn {
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
   padding:11px 16px;border:1px solid transparent;border-radius:12px;
-  font-size:12px;font-weight:800;transition:.2s
+  font-size:12px;font-weight:800;transition:.2s;
 }
-.btn:hover{transform:translateY(-2px)}
-.btn-primary{background:linear-gradient(110deg,#9278ff,#5849e7);color:white;box-shadow:0 8px 25px #7155ff30}
-.btn-secondary{background:var(--panel);border-color:var(--line);color:var(--text)}
-.metrics{display:flex;gap:28px;flex-wrap:wrap;margin-top:28px}
-.metric{display:flex;align-items:center;gap:10px}
-.metric-icon{display:grid;place-items:center;width:37px;height:37px;border-radius:12px;background:#8872ff25}
-.metric strong{display:block;font-size:14px}
-.metric small{display:block;color:var(--muted);font-size:10px}
-.section{margin-bottom:30px;scroll-margin-top:20px}
-.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
-.section-title{font-size:19px;letter-spacing:-.4px;margin:0}
-.section-sub{font-size:11px;color:var(--muted);margin-top:3px}
-.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
-.stat-card{padding:17px;border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:var(--shadow);transition:.2s}
-.stat-card:hover{transform:translateY(-3px);border-color:#8872ff77}
-.stat-icon{font-size:20px}
-.stat-number{font-size:27px;font-weight:900;letter-spacing:-1px;margin-top:8px}
-.stat-label{font-size:11px;color:var(--muted)}
-.filter-panel{padding:19px;border:1px solid var(--line);border-radius:20px;background:var(--panel);box-shadow:var(--shadow)}
-.filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.field label{display:block;margin:0 0 6px 2px;font-size:10px;font-weight:800;color:var(--muted)}
-.field input,.field select{width:100%;min-width:0;padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text);font-size:12px}
-.field select option{background:var(--bg);color:var(--text)}
-.filter-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px}
-.quick-tags{display:flex;gap:7px;flex-wrap:wrap}
-.tag{padding:7px 10px;border:1px solid var(--line);border-radius:30px;background:var(--panel2);color:var(--muted);font-size:10px;font-weight:700}
-.tag:hover,.tag.active{color:var(--text);border-color:var(--purple);background:#8872ff24}
-.results-toolbar{display:flex;align-items:center;gap:10px}
-.results-count{font-size:11px;color:var(--muted)}
-.results-toolbar select{padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font-size:11px}
-.university-list{display:grid;gap:12px}
-.university-card{
+.btn:hover {transform:translateY(-2px)}
+.btn-primary {background:linear-gradient(110deg,#9278ff,#5849e7);color:white;box-shadow:0 8px 25px #7155ff30}
+.btn-secondary {background:var(--panel);border-color:var(--line);color:var(--text)}
+.metrics {display:flex;gap:28px;flex-wrap:wrap;margin-top:28px}
+.metric {display:flex;align-items:center;gap:10px}
+.metric-icon {display:grid;place-items:center;width:37px;height:37px;border-radius:12px;background:#8872ff25}
+.metric strong {display:block;font-size:14px}
+.metric small {display:block;color:var(--muted);font-size:10px}
+
+.section {margin-bottom:30px;scroll-margin-top:20px}
+.section-head {display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.section-title {font-size:19px;letter-spacing:-.4px;margin:0}
+.section-sub {font-size:11px;color:var(--muted);margin-top:3px}
+.stats-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.stat-card {
+  padding:17px;border:1px solid var(--line);border-radius:18px;
+  background:var(--panel);box-shadow:var(--shadow);transition:.2s;
+}
+.stat-card:hover {transform:translateY(-3px);border-color:#8872ff77}
+.stat-icon {font-size:20px}
+.stat-number {font-size:27px;font-weight:900;letter-spacing:-1px;margin-top:8px}
+.stat-label {font-size:11px;color:var(--muted)}
+
+.filter-panel {padding:19px;border:1px solid var(--line);border-radius:20px;background:var(--panel);box-shadow:var(--shadow)}
+.filter-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.field label {display:block;margin:0 0 6px 2px;font-size:10px;font-weight:800;color:var(--muted)}
+.field input,.field select {
+  width:100%;min-width:0;padding:11px;border:1px solid var(--line);
+  border-radius:11px;background:var(--panel2);color:var(--text);font-size:12px;
+}
+.field select option {background:var(--bg);color:var(--text)}
+.filter-bottom {display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px}
+.quick-tags {display:flex;gap:7px;flex-wrap:wrap}
+.tag {padding:7px 10px;border:1px solid var(--line);border-radius:30px;background:var(--panel2);color:var(--muted);font-size:10px;font-weight:700}
+.tag:hover,.tag.active {color:var(--text);border-color:var(--purple);background:#8872ff24}
+
+.results-toolbar {display:flex;align-items:center;gap:10px}
+.results-count {font-size:11px;color:var(--muted)}
+.results-toolbar select {padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font-size:11px}
+.university-list {display:grid;gap:12px}
+.university-card {
   display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:15px;align-items:center;
   padding:16px;border:1px solid var(--line);border-radius:19px;background:var(--panel);
-  box-shadow:var(--shadow);transition:transform .2s,border-color .2s
+  box-shadow:var(--shadow);transition:transform .2s,border-color .2s;
 }
-.university-card:hover{transform:translateY(-3px);border-color:#8872ff88}
-.uni-logo{display:grid;place-items:center;width:70px;height:70px;border-radius:17px;color:white;font-weight:900;font-size:22px;letter-spacing:-1px;background:linear-gradient(135deg,var(--uni-color,#8270ff),#26375f);box-shadow:inset 0 0 0 1px #ffffff25}
-.uni-name{font-size:14px;font-weight:850}
-.uni-location{font-size:10px;color:var(--muted);margin-top:4px}
-.uni-desc{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6}
-.uni-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
-.uni-tag{padding:4px 7px;border-radius:7px;background:var(--panel2);font-size:9px;color:var(--muted)}
-.uni-side{min-width:125px;text-align:right}
-.grant-label{font-size:10px;color:var(--muted)}
-.grant-value{font-size:17px;font-weight:900;color:var(--green);margin:3px 0 8px}
-.uni-side .btn{padding:8px 11px;font-size:10px}
-.card-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:7px}
-.mini-btn{width:30px;height:30px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--muted)}
-.mini-btn.saved{color:#ff77a9;border-color:#ff77a966}
-.empty{text-align:center;padding:40px 20px;border:1px dashed var(--line);border-radius:20px;background:var(--panel)}
-.empty h3{margin-bottom:5px}
-.empty p{color:var(--muted);font-size:12px}
-.two-column{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
-.panel{padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--panel);box-shadow:var(--shadow);min-width:0}
-.panel-heading{display:flex;align-items:center;gap:11px;margin-bottom:17px}
-.panel-icon{display:grid;place-items:center;width:39px;height:39px;border-radius:13px;background:#8872ff25;font-size:19px}
-.panel-heading h3{font-size:14px;margin:0}
-.panel-heading p{font-size:10px;color:var(--muted);margin:3px 0 0}
-.score-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.profile-hint{margin-top:14px;padding:11px;border-radius:11px;background:#42dfad10;color:var(--muted);font-size:10px;line-height:1.7}
-.profile-hint strong{color:var(--green)}
-.grant-banner{background:linear-gradient(135deg,#7155ff22,#25b9cf15)}
-.grant-banner p{font-size:11px;color:var(--muted);line-height:1.8}
-.site-footer{padding:23px 0 0;text-align:center;color:var(--muted);font-size:10px;border-top:1px solid var(--line);margin-top:30px}
-.compare-bar{display:none;position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:20;align-items:center;gap:12px;padding:11px 15px;border:1px solid var(--line);border-radius:16px;background:var(--panel);box-shadow:0 20px 60px #0005;backdrop-filter:blur(20px);max-width:calc(100% - 20px);font-size:12px}
-.compare-bar.show{display:flex}
-.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:15px;background:#040714bb;backdrop-filter:blur(8px)}
-.modal.open{display:flex}
-.modal-card{width:min(600px,100%);max-height:88vh;overflow:auto;padding:23px;border:1px solid var(--line);border-radius:22px;background:var(--bg);box-shadow:0 25px 90px #0006}
-.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.modal-head h2{font-size:20px;margin:0}
-.close-btn{width:35px;height:35px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font-size:19px}
-.modal-body{font-size:12px;color:var(--muted);line-height:1.8;margin:17px 0}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
-.detail-box{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
-.detail-box small{display:block;color:var(--muted);font-size:10px}
-.detail-box strong{display:block;color:var(--text);margin-top:4px;font-size:14px}
-.modal-actions{display:flex;gap:8px;flex-wrap:wrap}
-.compare-table{width:100%;border-collapse:collapse;font-size:11px}
-.compare-table th,.compare-table td{padding:10px 7px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-.toast{position:fixed;right:20px;bottom:20px;z-index:80;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:var(--shadow);font-size:12px;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}
-.toast.show{opacity:1;transform:translateY(0)}
-@media(max-width:1150px){
-  .sidebar{width:200px}.main{margin-left:200px;width:calc(100% - 200px);padding:0 20px 30px}
-  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.university-card:hover {transform:translateY(-3px);border-color:#8872ff88}
+.uni-logo {
+  display:grid;place-items:center;width:70px;height:70px;border-radius:17px;
+  color:white;font-weight:900;font-size:22px;letter-spacing:-1px;
+  background:linear-gradient(135deg,var(--uni-color,#8270ff),#26375f);
+  box-shadow:inset 0 0 0 1px #ffffff25;
 }
-@media(max-width:800px){
-  .sidebar{width:65px;padding:20px 8px}.brand{justify-content:center;padding:0 0 25px}
-  .brand-name,.nav-label,.nav-text,.nav-count,.quote,.sidebar-footer{display:none}
-  .nav button{justify-content:center;padding:13px 4px}
-  .main{margin-left:65px;width:calc(100% - 65px);padding:0 14px 25px}
-  .two-column{grid-template-columns:1fr}.profile-name{display:none}.search-top input{width:180px}
+.uni-name {font-size:14px;font-weight:850}
+.uni-location {font-size:10px;color:var(--muted);margin-top:4px}
+.uni-desc {font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6}
+.uni-tags {display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.uni-tag {padding:4px 7px;border-radius:7px;background:var(--panel2);font-size:9px;color:var(--muted)}
+.uni-side {min-width:125px;text-align:right}
+.grant-label {font-size:10px;color:var(--muted)}
+.grant-value {font-size:17px;font-weight:900;color:var(--green);margin:3px 0 8px}
+.uni-side .btn {padding:8px 11px;font-size:10px}
+.card-actions {display:flex;justify-content:flex-end;gap:6px;margin-top:7px}
+.mini-btn {width:30px;height:30px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--muted)}
+.mini-btn.saved {color:#ff77a9;border-color:#ff77a966}
+.empty {text-align:center;padding:40px 20px;border:1px dashed var(--line);border-radius:20px;background:var(--panel)}
+.empty h3 {margin-bottom:5px}
+.empty p {color:var(--muted);font-size:12px}
+
+.two-column {display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+.panel {padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--panel);box-shadow:var(--shadow);min-width:0}
+.panel-heading {display:flex;align-items:center;gap:11px;margin-bottom:17px}
+.panel-icon {display:grid;place-items:center;width:39px;height:39px;border-radius:13px;background:#8872ff25;font-size:19px}
+.panel-heading h3 {font-size:14px;margin:0}
+.panel-heading p {font-size:10px;color:var(--muted);margin:3px 0 0}
+.score-fields {display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.profile-hint {margin-top:14px;padding:11px;border-radius:11px;background:#42dfad10;color:var(--muted);font-size:10px;line-height:1.7}
+.profile-hint strong {color:var(--green)}
+.grant-banner {background:linear-gradient(135deg,#7155ff22,#25b9cf15)}
+.grant-banner p {font-size:11px;color:var(--muted);line-height:1.8}
+.site-footer {padding:23px 0 0;text-align:center;color:var(--muted);font-size:10px;border-top:1px solid var(--line);margin-top:30px}
+
+.compare-bar {
+  display:none;position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:20;
+  align-items:center;gap:12px;padding:11px 15px;border:1px solid var(--line);
+  border-radius:16px;background:var(--panel);box-shadow:0 20px 60px #0005;backdrop-filter:blur(20px);
+  max-width:calc(100% - 20px);font-size:12px;
 }
-@media(max-width:560px){
-  .sidebar{display:none}.main{margin-left:0;width:100%;padding:0 12px 24px}
-  .topbar{min-height:65px;margin-bottom:18px}.breadcrumb{display:none}.top-actions{width:100%}
-  .search-top{flex:1}.search-top input{width:100%}.profile-mini{display:none}
-  .hero{padding:23px 18px;border-radius:21px}.hero h1{font-size:32px;letter-spacing:-1px}.hero p{font-size:12px}
-  .metrics{gap:13px}.metric{gap:6px}.metric strong{font-size:12px}.metric small{font-size:9px}
-  .stat-card{padding:12px}.stat-number{font-size:23px}.filter-panel{padding:12px}.filter-grid{gap:9px}
-  .field input,.field select{padding:10px 7px;font-size:11px}.section-title{font-size:17px}
-  .section-head{align-items:flex-start}.results-toolbar{flex-wrap:wrap;justify-content:flex-end}
-  .university-card{grid-template-columns:52px minmax(0,1fr);gap:10px;padding:11px}
-  .uni-logo{width:52px;height:52px;border-radius:13px;font-size:17px}
-  .uni-name{font-size:12px}.uni-location,.uni-desc{font-size:10px}
-  .uni-side{grid-column:2;display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;text-align:left}
-  .grant-value{font-size:14px;margin-bottom:0}.uni-side .btn{font-size:10px}
-  .card-actions{margin:0}.panel{padding:15px}.compare-bar{gap:7px;padding:9px;font-size:10px}
-  .compare-bar .btn{padding:8px;font-size:10px}
+.compare-bar.show {display:flex}
+.modal {
+  position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+  padding:15px;background:#040714bb;backdrop-filter:blur(8px);
 }
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+.modal.open {display:flex}
+.modal-card {
+  width:min(600px,100%);max-height:88vh;overflow:auto;padding:23px;
+  border:1px solid var(--line);border-radius:22px;background:var(--bg);box-shadow:0 25px 90px #0006;
+}
+.modal-head {display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.modal-head h2 {font-size:20px;margin:0}
+.close-btn {width:35px;height:35px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font-size:19px}
+.modal-body {font-size:12px;color:var(--muted);line-height:1.8;margin:17px 0}
+.detail-grid {display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.detail-box {padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.detail-box small {display:block;color:var(--muted);font-size:10px}
+.detail-box strong {display:block;color:var(--text);margin-top:4px;font-size:14px}
+.modal-actions {display:flex;gap:8px;flex-wrap:wrap}
+.compare-table {width:100%;border-collapse:collapse;font-size:11px}
+.compare-table th,.compare-table td {padding:10px 7px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.toast {
+  position:fixed;right:20px;bottom:20px;z-index:80;padding:12px 16px;
+  border:1px solid var(--line);border-radius:12px;background:var(--panel);
+  box-shadow:var(--shadow);font-size:12px;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s;
+}
+.toast.show {opacity:1;transform:translateY(0)}
+
+@media(max-width:1150px) {
+  .sidebar {width:200px}
+  .main {margin-left:200px;width:calc(100% - 200px);padding:0 20px 30px}
+  .stats-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filter-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:800px) {
+  .sidebar {width:65px;padding:20px 8px}
+  .brand {justify-content:center;padding:0 0 25px}
+  .brand-name,.nav-label,.nav-text,.nav-count,.quote,.sidebar-footer {display:none}
+  .nav button {justify-content:center;padding:13px 4px}
+  .main {margin-left:65px;width:calc(100% - 65px);padding:0 14px 25px}
+  .two-column {grid-template-columns:1fr}
+  .profile-name {display:none}
+  .search-top input {width:180px}
+}
+@media(max-width:560px) {
+  .sidebar {display:none}
+  .main {margin-left:0;width:100%;padding:0 12px 24px}
+  .topbar {min-height:65px;margin-bottom:18px}
+  .breadcrumb {display:none}
+  .top-actions {width:100%}
+  .search-top {flex:1}
+  .search-top input {width:100%}
+  .profile-mini {display:none}
+  .hero {padding:23px 18px;border-radius:21px}
+  .hero h1 {font-size:32px;letter-spacing:-1px}
+  .hero p {font-size:12px}
+  .metrics {gap:13px}
+  .metric {gap:6px}
+  .metric strong {font-size:12px}
+  .metric small {font-size:9px}
+  .stat-card {padding:12px}
+  .stat-number {font-size:23px}
+  .filter-panel {padding:12px}
+  .filter-grid {gap:9px}
+  .field input,.field select {padding:10px 7px;font-size:11px}
+  .section-title {font-size:17px}
+  .section-head {align-items:flex-start}
+  .results-toolbar {flex-wrap:wrap;justify-content:flex-end}
+  .university-card {grid-template-columns:52px minmax(0,1fr);gap:10px;padding:11px}
+  .uni-logo {width:52px;height:52px;border-radius:13px;font-size:17px}
+  .uni-name {font-size:12px}
+  .uni-location,.uni-desc {font-size:10px}
+  .uni-side {grid-column:2;display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;text-align:left}
+  .grant-value {font-size:14px;margin-bottom:0}
+  .uni-side .btn {font-size:10px}
+  .card-actions {margin:0}
+  .panel {padding:15px}
+  .compare-bar {gap:7px;padding:9px;font-size:10px}
+  .compare-bar .btn {padding:8px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {animation:none!important;scroll-behavior:auto!important;transition:none!important}
+}
 </style>
 </head>
+
 <body>
 <div class="background" aria-hidden="true">
   <div class="orb one"></div><div class="orb two"></div><div class="orb three"></div>
 </div>
+
 <div class="layout">
 <aside class="sidebar">
   <a class="brand" href="#home"><span class="brand-icon">🎓</span><span class="brand-name">UniFinder</span></a>
-  <div class="nav-label" data-i18n="workspace">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+  <div class="nav-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
   <nav class="nav">
-    <button class="active" data-target="home"><span class="nav-icon">⌂</span><span class="nav-text" data-i18n="home">Главная</span></button>
-    <button data-target="search-section"><span class="nav-icon">⌕</span><span class="nav-text" data-i18n="search">Поиск вузов</span></button>
-    <button id="favoritesNav"><span class="nav-icon">♡</span><span class="nav-text" data-i18n="favorites">Избранное</span><span class="nav-count" id="favoriteCount">0</span></button>
-    <button id="compareNav"><span class="nav-icon">⇄</span><span class="nav-text" data-i18n="compare">Сравнение</span><span class="nav-count" id="compareCount">0</span></button>
-    <button data-target="profile-section"><span class="nav-icon">♙</span><span class="nav-text" data-i18n="profile">Мой профиль</span></button>
+    <button class="active" data-target="home"><span class="nav-icon">⌂</span><span class="nav-text">Главная</span></button>
+    <button data-target="search-section"><span class="nav-icon">⌕</span><span class="nav-text">Поиск вузов</span></button>
+    <button id="favoritesNav"><span class="nav-icon">♡</span><span class="nav-text">Избранное</span><span class="nav-count" id="favoriteCount">0</span></button>
+    <button id="compareNav"><span class="nav-icon">⇄</span><span class="nav-text">Сравнение</span><span class="nav-count" id="compareCount">0</span></button>
+    <button data-target="profile-section"><span class="nav-icon">♙</span><span class="nav-text">Мой профиль</span></button>
   </nav>
   <div class="sidebar-bottom">
-    <div class="quote"><strong data-i18n="bigGoals">✦ Большие цели</strong><p data-i18n="quote">Твоё будущее начинается с одного правильного шага. Изучай возможности и выбирай осознанно.</p></div>
+    <div class="quote"><strong>✦ Большие цели</strong><p>Твоё будущее начинается с одного правильного шага. Изучай возможности и выбирай осознанно.</p></div>
     <div class="sidebar-footer">Created by Alikhan</div>
   </div>
 </aside>
+
 <main class="main" id="home">
   <header class="topbar">
-    <div class="breadcrumb"><span data-i18n="workspace">Рабочее пространство</span> / <strong data-i18n="home">Главная</strong></div>
+    <div class="breadcrumb">Рабочее пространство / <strong>Главная</strong></div>
     <div class="top-actions">
-      <div class="search-top"><span>⌕</span><input id="topSearch" type="search" placeholder="Поиск университетов..." data-i18n-placeholder="searchPlaceholder" aria-label="Search universities"></div>
-      <button class="icon-button" id="languageToggle" title="Switch language" aria-label="Switch language" style="width:48px;font-size:11px;font-weight:800">EN</button>
+      <div class="search-top"><span>⌕</span><input id="topSearch" type="search" placeholder="Поиск университетов..." aria-label="Поиск университетов"></div>
       <button class="icon-button" id="themeToggle" title="Сменить тему" aria-label="Сменить тему">☼</button>
       <div class="profile-mini"><div class="avatar">A</div><span class="profile-name">Alikhan</span></div>
     </div>
   </header>
+
   <section class="hero">
-    <span class="eyebrow" data-i18n="eyebrow">✦ ТВОЙ ПУТЬ К УСПЕХУ</span>
-    <h1 data-i18n="heroTitle">Твоё будущее начинается <span class="gradient-text">здесь.</span></h1>
-    <p data-i18n="heroText">Находи университеты в разных странах, изучай направления и сравнивай возможности финансирования. Построй собственный путь к образованию своей мечты.</p>
+    <span class="eyebrow">✦ ТВОЙ ПУТЬ К УСПЕХУ</span>
+    <h1>Твоё будущее начинается <span class="gradient-text">здесь.</span></h1>
+    <p>Находи университеты в разных странах, изучай направления и сравнивай возможности финансирования. Построй собственный путь к образованию своей мечты.</p>
     <div class="hero-actions">
-      <button class="btn btn-primary" data-scroll="search-section" data-i18n="findUniversity">Найти университет →</button>
-      <button class="btn btn-secondary" data-scroll="profile-section" data-i18n="setupProfile">Настроить профиль</button>
+      <button class="btn btn-primary" data-scroll="search-section">Найти университет →</button>
+      <button class="btn btn-secondary" data-scroll="profile-section">Настроить профиль</button>
     </div>
     <div class="metrics">
-      <div class="metric"><div class="metric-icon">🌍</div><div><strong data-i18n="worldwide">По всему миру</strong><small data-i18n="countriesCities">Разные страны и города</small></div></div>
-      <div class="metric"><div class="metric-icon">🎯</div><div><strong data-i18n="yourProfile">Твой профиль</strong><small data-i18n="searchByScores">Поиск по баллам</small></div></div>
-      <div class="metric"><div class="metric-icon">🎓</div><div><strong data-i18n="grants">Гранты</strong><small data-i18n="fundingOptions">Варианты финансирования</small></div></div>
+      <div class="metric"><div class="metric-icon">🌍</div><div><strong>По всему миру</strong><small>Разные страны и города</small></div></div>
+      <div class="metric"><div class="metric-icon">🎯</div><div><strong>Твой профиль</strong><small>Поиск по баллам</small></div></div>
+      <div class="metric"><div class="metric-icon">🎓</div><div><strong>Гранты</strong><small>Варианты финансирования</small></div></div>
     </div>
   </section>
+
   <section class="section">
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-icon">🏛️</div><div class="stat-number" id="totalStat">0</div><div class="stat-label" data-i18n="catalogUniversities">Университетов в каталоге</div></div>
-      <div class="stat-card"><div class="stat-icon">🌐</div><div class="stat-number" id="countryStat">0</div><div class="stat-label" data-i18n="countriesSearch">Стран для поиска</div></div>
-      <div class="stat-card"><div class="stat-icon">💜</div><div class="stat-number" id="savedStat">0</div><div class="stat-label" data-i18n="inFavorites">В избранном</div></div>
-      <div class="stat-card"><div class="stat-icon">⚖️</div><div class="stat-number" id="comparedStat">0</div><div class="stat-label" data-i18n="inComparison">На сравнении</div></div>
+      <div class="stat-card"><div class="stat-icon">🏛️</div><div class="stat-number" id="totalStat">0</div><div class="stat-label">Университетов в каталоге</div></div>
+      <div class="stat-card"><div class="stat-icon">🌐</div><div class="stat-number" id="countryStat">0</div><div class="stat-label">Стран для поиска</div></div>
+      <div class="stat-card"><div class="stat-icon">💜</div><div class="stat-number" id="savedStat">0</div><div class="stat-label">В избранном</div></div>
+      <div class="stat-card"><div class="stat-icon">⚖️</div><div class="stat-number" id="comparedStat">0</div><div class="stat-label">На сравнении</div></div>
     </div>
   </section>
+
   <section class="section" id="search-section">
-    <div class="section-head"><div><h2 class="section-title" data-i18n="findYourUni">Найди свой университет</h2><div class="section-sub" data-i18n="filtersSubtitle">Настрой фильтры под свои цели</div></div></div>
+    <div class="section-head"><div><h2 class="section-title">Найди свой университет</h2><div class="section-sub">Настрой фильтры под свои цели</div></div></div>
     <div class="filter-panel">
       <div class="filter-grid">
-        <div class="field"><label for="countryFilter" data-i18n="country">СТРАНА</label><select id="countryFilter"><option value="" data-i18n="anyCountry">Любая страна</option></select></div>
-        <div class="field"><label for="cityFilter" data-i18n="city">ГОРОД</label><select id="cityFilter"><option value="" data-i18n="anyCity">Любой город</option></select></div>
-        <div class="field"><label for="fieldFilter" data-i18n="field">НАПРАВЛЕНИЕ</label><select id="fieldFilter"><option value="" data-i18n="anyField">Любая специальность</option><option>IT</option><option>Инженерия</option><option>Бизнес</option><option>Медицина</option><option>Право</option><option>Наука</option><option>Гуманитарные науки</option></select></div>
-        <div class="field"><label for="grantFilter" data-i18n="funding">ФИНАНСИРОВАНИЕ</label><select id="grantFilter"><option value="" data-i18n="anyFunding">Любой вариант</option><option value="yes" data-i18n="grantOptions">Есть варианты грантов</option><option value="full" data-i18n="fullGrant">Указано до 100%</option></select></div>
-        <div class="field"><label for="budgetFilter" data-i18n="budget">БЮДЖЕТ В ГОД (USD)</label><select id="budgetFilter"><option value="" data-i18n="anyBudget">Любой бюджет</option><option value="10000">До $10 000</option><option value="25000">До $25 000</option><option value="50000">До $50 000</option></select></div>
-        <div class="field"><label for="ieltsFilter">IELTS</label><input id="ieltsFilter" type="number" min="0" max="9" step=".5" value="6.5"></div>
-        <div class="field"><label for="satFilter">SAT</label><input id="satFilter" type="number" min="400" max="1600" step="10" value="1250"></div>
-        <div class="field"><label for="searchInput" data-i18n="nameOrCity">НАЗВАНИЕ / ГОРОД</label><input id="searchInput" type="search" placeholder="Например, Astana..." data-i18n-placeholder="searchExample"></div>
+        <div class="field"><label for="countryFilter">СТРАНА</label><select id="countryFilter"><option value="">Любая страна</option></select></div>
+        <div class="field"><label for="cityFilter">ГОРОД</label><select id="cityFilter"><option value="">Любой город</option></select></div>
+        <div class="field"><label for="fieldFilter">НАПРАВЛЕНИЕ</label><select id="fieldFilter"><option value="">Любая специальность</option><option>IT</option><option>Инженерия</option><option>Бизнес</option><option>Медицина</option><option>Право</option><option>Наука</option><option>Гуманитарные науки</option></select></div>
+        <div class="field"><label for="grantFilter">ФИНАНСИРОВАНИЕ</label><select id="grantFilter"><option value="">Любой вариант</option><option value="yes">Есть варианты грантов</option><option value="full">Указано до 100%</option></select></div>
+        <div class="field"><label for="budgetFilter">БЮДЖЕТ В ГОД (USD)</label><select id="budgetFilter"><option value="">Любой бюджет</option><option value="10000">До $10 000</option><option value="25000">До $25 000</option><option value="50000">До $50 000</option></select></div>
+        <div class="field"><label for="ieltsFilter">МОЙ IELTS</label><input id="ieltsFilter" type="number" min="0" max="9" step=".5" value="6.5"></div>
+        <div class="field"><label for="satFilter">МОЙ SAT</label><input id="satFilter" type="number" min="400" max="1600" step="10" value="1250"></div>
+        <div class="field"><label for="searchInput">НАЗВАНИЕ / ГОРОД</label><input id="searchInput" type="search" placeholder="Например, Astana..."></div>
       </div>
       <div class="filter-bottom">
         <div class="quick-tags">
-          <button class="tag" data-quick="grant" data-i18n="quickGrants">🎓 Гранты</button>
+          <button class="tag" data-quick="grant">🎓 Гранты</button>
           <button class="tag" data-quick="IT">💻 IT</button>
-          <button class="tag" data-quick="Бизнес" data-i18n="business">📈 Бизнес</button>
-          <button class="tag" data-quick="Казахстан" data-i18n="kazakhstan">🇰🇿 Казахстан</button>
+          <button class="tag" data-quick="Бизнес">📈 Бизнес</button>
+          <button class="tag" data-quick="Казахстан">🇰🇿 Казахстан</button>
         </div>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-secondary" id="resetFilters" data-i18n="reset">Сбросить</button>
-          <button class="btn btn-primary" id="applyFilters" data-i18n="searchOptions">Найти варианты →</button>
+          <button class="btn btn-secondary" id="resetFilters">Сбросить</button>
+          <button class="btn btn-primary" id="applyFilters">Найти варианты →</button>
         </div>
       </div>
     </div>
   </section>
+
   <section class="section">
     <div class="section-head">
-      <div><h2 class="section-title" id="resultsTitle" data-i18n="worldUniversities">Университеты мира</h2><div class="section-sub" data-i18n="resultsSubtitle">Изучи варианты и сравни условия</div></div>
-      <div class="results-toolbar"><span class="results-count" id="resultsCount">0 вариантов</span><select id="sortFilter" aria-label="Sort universities"><option value="name" data-i18n="sortName">По названию</option><option value="cost" data-i18n="sortCost">По стоимости</option><option value="grant" data-i18n="sortGrant">По грантам</option></select></div>
+      <div><h2 class="section-title" id="resultsTitle">Университеты мира</h2><div class="section-sub">Изучи варианты и сравни условия</div></div>
+      <div class="results-toolbar"><span class="results-count" id="resultsCount">0 вариантов</span><select id="sortFilter" aria-label="Сортировка"><option value="name">По названию</option><option value="cost">По стоимости</option><option value="grant">По грантам</option></select></div>
     </div>
     <div class="university-list" id="universityList"></div>
   </section>
+
   <section class="section" id="profile-section">
-    <div class="section-head"><div><h2 class="section-title" data-i18n="admissionProfile">Твой профиль поступления</h2><div class="section-sub" data-i18n="profileSubtitle">Сохрани результаты для удобного поиска</div></div></div>
+    <div class="section-head"><div><h2 class="section-title">Твой профиль поступления</h2><div class="section-sub">Сохрани результаты для удобного поиска</div></div></div>
     <div class="two-column">
       <div class="panel">
-        <div class="panel-heading"><div class="panel-icon">♙</div><div><h3 data-i18n="academicResults">Академические результаты</h3><p data-i18n="profileSettings">Настрой данные своего профиля</p></div></div>
+        <div class="panel-heading"><div class="panel-icon">♙</div><div><h3>Академические результаты</h3><p>Настрой данные своего профиля</p></div></div>
         <div class="score-fields">
           <div class="field"><label for="profileIELTS">IELTS BAND</label><input type="number" id="profileIELTS" min="0" max="9" step=".5" value="6.5"></div>
           <div class="field"><label for="profileSAT">SAT SCORE</label><input type="number" id="profileSAT" min="400" max="1600" step="10" value="1250"></div>
-          <div class="field"><label for="profileCountry" data-i18n="citizenship">ГРАЖДАНСТВО</label><input id="profileCountry" value="Узбекистан"></div>
-          <div class="field"><label for="profileYear" data-i18n="admissionYear">ГОД ПОСТУПЛЕНИЯ</label><input id="profileYear" value="2027"></div>
+          <div class="field"><label for="profileCountry">ГРАЖДАНСТВО</label><input id="profileCountry" value="Узбекистан"></div>
+          <div class="field"><label for="profileYear">ГОД ПОСТУПЛЕНИЯ</label><input id="profileYear" value="2027"></div>
         </div>
-        <div class="profile-hint"><strong data-i18n="important">Важно:</strong> <span data-i18n="scoreWarning">баллы сами по себе не гарантируют поступление или грант. Всегда проверяй официальные требования и сроки.</span></div>
-        <div style="margin-top:14px"><button class="btn btn-primary" id="saveProfile" data-i18n="saveProfile">Сохранить профиль</button></div>
+        <div class="profile-hint"><strong>Важно:</strong> баллы сами по себе не гарантируют поступление или грант. Всегда проверяй официальные требования и сроки.</div>
+        <div style="margin-top:14px"><button class="btn btn-primary" id="saveProfile">Сохранить профиль</button></div>
       </div>
       <div style="display:grid;gap:16px;align-content:start">
         <div class="panel grant-banner">
-          <div class="panel-heading"><div class="panel-icon">🎓</div><div><h3 data-i18n="scholarships">Гранты и стипендии</h3><p data-i18n="fundingSubtitle">Изучи варианты финансирования</p></div></div>
-          <p data-i18n="fundingDescription">Сравни стипендии, стоимость и требования. Условия для иностранных студентов могут отличаться.</p>
-          <button class="btn btn-primary" id="showGrants" data-i18n="showGrants">Показать варианты →</button>
+          <div class="panel-heading"><div class="panel-icon">🎓</div><div><h3>Гранты и стипендии</h3><p>Изучи варианты финансирования</p></div></div>
+          <p>Сравни стипендии, стоимость и требования. Условия для иностранных студентов могут отличаться.</p>
+          <button class="btn btn-primary" id="showGrants">Показать варианты →</button>
         </div>
         <div class="panel">
-          <div class="panel-heading"><div class="panel-icon">🌍</div><div><h3 data-i18n="popularCountries">Популярные страны</h3><p data-i18n="catalogSample">Часть каталога UniFinder</p></div></div>
-          <p style="font-size:12px;color:var(--muted)">🇺🇸 USA · 🇬🇧 UK · 🇰🇿 Kazakhstan · 🇨🇦 Canada · 🇩🇪 Germany · 🇦🇺 Australia · 🇸🇬 Singapore · 🇯🇵 Japan · 🇰🇷 South Korea · 🇨🇳 China</p>
+          <div class="panel-heading"><div class="panel-icon">🌍</div><div><h3>Популярные страны</h3><p>Часть каталога UniFinder</p></div></div>
+          <p style="font-size:12px;color:var(--muted)">🇺🇸 США · 🇬🇧 Великобритания · 🇰🇿 Казахстан · 🇨🇦 Канада · 🇩🇪 Германия · 🇦🇺 Австралия · 🇸🇬 Сингапур · 🇯🇵 Япония · 🇰🇷 Южная Корея · 🇨🇳 Китай</p>
         </div>
       </div>
     </div>
   </section>
-  <footer class="site-footer" data-i18n="footer">UniFinder · Твой путь к образованию начинается здесь.<br><br>Created by Alikhan</footer>
+
+  <footer class="site-footer">UniFinder · Твой путь к образованию начинается здесь.<br><br>Created by Alikhan</footer>
 </main>
 </div>
+
 <div class="compare-bar" id="compareBar">
-  <span data-i18n="compareSelected">⚖️ Для сравнения:</span> <strong id="compareBarCount">0</strong>
-  <button class="btn btn-primary" id="openCompare" data-i18n="compareNow">Сравнить</button>
-  <button class="icon-button" id="clearCompare" aria-label="Clear comparison">×</button>
+  <span>⚖️ Для сравнения: <strong id="compareBarCount">0</strong></span>
+  <button class="btn btn-primary" id="openCompare">Сравнить</button>
+  <button class="icon-button" id="clearCompare" aria-label="Очистить сравнение">×</button>
 </div>
+
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal-card">
-    <div class="modal-head"><h2 id="modalTitle">Университет</h2><button class="close-btn" id="closeModal" aria-label="Close">×</button></div>
+    <div class="modal-head"><h2 id="modalTitle">Университет</h2><button class="close-btn" id="closeModal" aria-label="Закрыть">×</button></div>
     <div class="modal-body" id="modalBody"></div>
     <div class="modal-actions" id="modalActions"></div>
   </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+
+const universities = [
+{id:1,name:"Astana IT University",country:"Казахстан",city:"Астана",symbol:"AITU",color:"#6259e8",cost:6500,grant:100,fields:["IT","Инженерия","Бизнес"],ielts:5,sat:0,language:"Английский",desc:"Университет с фокусом на информационные технологии, цифровые навыки и инновации.",note:"Проверь условия грантов для граждан Узбекистана.",url:"https://astanait.edu.kz/"},
+{id:2,name:"Nazarbayev University",country:"Казахстан",city:"Астана",symbol:"NU",color:"#188b9b",cost:15000,grant:100,fields:["IT","Инженерия","Наука","Бизнес"],ielts:6.5,sat:0,language:"Английский",desc:"Исследовательский университет с международными академическими программами.",note:"Проверь критерии поступления и финансирования иностранных абитуриентов.",url:"https://nu.edu.kz/"},
+{id:3,name:"Al-Farabi Kazakh National University",country:"Казахстан",city:"Алматы",symbol:"KazNU",color:"#2876a8",cost:5000,grant:100,fields:["IT","Наука","Медицина","Право"],ielts:5.5,sat:0,language:"Казахский / Русский / Английский",desc:"Крупный университет Казахстана с широким выбором направлений.",note:"Уточни доступность грантов и условия для иностранных студентов.",url:"https://farabi.university/"},
+{id:4,name:"KBTU",country:"Казахстан",city:"Алматы",symbol:"KBTU",color:"#2876a8",cost:7000,grant:100,fields:["IT","Инженерия","Бизнес"],ielts:5.5,sat:0,language:"Английский",desc:"Университет с программами в технологиях, инженерии и бизнесе.",note:"Проверь действующие правила грантов и стипендий.",url:"https://kbtu.edu.kz/"},
+{id:5,name:"MIT",country:"США",city:"Кембридж",symbol:"MIT",color:"#a34b57",cost:60000,grant:100,fields:["IT","Инженерия","Наука","Бизнес"],ielts:7,sat:1500,language:"Английский",desc:"Известный университет с сильными направлениями инженерии, технологий и науки.",note:"Финансовая помощь зависит от правил университета и заявки.",url:"https://www.mit.edu/"},
+{id:6,name:"Harvard University",country:"США",city:"Кембридж",symbol:"H",color:"#a83252",cost:60000,grant:100,fields:["Бизнес","Право","Медицина","Наука","IT"],ielts:7,sat:1500,language:"Английский",desc:"Университет с большим выбором направлений и исследовательской средой.",note:"Процент в карточке не является личной вероятностью получения гранта.",url:"https://www.harvard.edu/"},
+{id:7,name:"Stanford University",country:"США",city:"Стэнфорд",symbol:"SU",color:"#bd4a48",cost:62000,grant:100,fields:["IT","Инженерия","Бизнес","Наука"],ielts:7,sat:1500,language:"Английский",desc:"Университет, известный инновациями, исследованиями и предпринимательством.",note:"Проверь требования и финансовую помощь для иностранных абитуриентов.",url:"https://www.stanford.edu/"},
+{id:8,name:"University of California, Berkeley",country:"США",city:"Беркли",symbol:"UCB",color:"#2455a6",cost:48000,grant:50,fields:["IT","Инженерия","Наука","Бизнес"],ielts:6.5,sat:1400,language:"Английский",desc:"Исследовательский университет с сильными научными и техническими программами.",note:"Стоимость и помощь зависят от статуса студента и программы.",url:"https://www.berkeley.edu/"},
+{id:9,name:"University of Oxford",country:"Великобритания",city:"Оксфорд",symbol:"OX",color:"#385b9b",cost:50000,grant:50,fields:["Медицина","Право","Гуманитарные науки","Наука","IT"],ielts:7,sat:1400,language:"Английский",desc:"Университет с широким выбором академических программ и исследований.",note:"Для иностранных студентов полное финансирование ограничено.",url:"https://www.ox.ac.uk/"},
+{id:10,name:"University of Cambridge",country:"Великобритания",city:"Кембридж",symbol:"CAM",color:"#386c66",cost:50000,grant:50,fields:["IT","Инженерия","Медицина","Наука"],ielts:7.5,sat:1450,language:"Английский",desc:"Университет с сильными академическими программами и научными исследованиями.",note:"Проверь требования конкретной программы и стипендии.",url:"https://www.cam.ac.uk/"},
+{id:11,name:"Imperial College London",country:"Великобритания",city:"Лондон",symbol:"ICL",color:"#c73c4e",cost:50000,grant:40,fields:["IT","Инженерия","Медицина","Наука"],ielts:6.5,sat:1400,language:"Английский",desc:"Университет, специализирующийся на науке, медицине, инженерии и технологиях.",note:"Требования различаются по курсам.",url:"https://www.imperial.ac.uk/"},
+{id:12,name:"University College London",country:"Великобритания",city:"Лондон",symbol:"UCL",color:"#385c9b",cost:45000,grant:35,fields:["IT","Медицина","Право","Наука"],ielts:6.5,sat:1350,language:"Английский",desc:"Международный университет с большим количеством дисциплин.",note:"Проверь стоимость обучения и условия финансирования.",url:"https://www.ucl.ac.uk/"},
+{id:13,name:"University of Toronto",country:"Канада",city:"Торонто",symbol:"UofT",color:"#bf3449",cost:45000,grant:35,fields:["IT","Инженерия","Медицина","Бизнес","Наука"],ielts:6.5,sat:1300,language:"Английский",desc:"Крупный исследовательский университет с программами в разных областях.",note:"Стипендии, требования и цены зависят от программы.",url:"https://www.utoronto.ca/"},
+{id:14,name:"University of British Columbia",country:"Канада",city:"Ванкувер",symbol:"UBC",color:"#1b5b9e",cost:42000,grant:40,fields:["IT","Инженерия","Бизнес","Наука"],ielts:6.5,sat:1300,language:"Английский",desc:"Университет с исследовательскими программами и международным сообществом.",note:"Уточни требования и доступные стипендии.",url:"https://www.ubc.ca/"},
+{id:15,name:"University of Melbourne",country:"Австралия",city:"Мельбурн",symbol:"MEL",color:"#2876a8",cost:40000,grant:40,fields:["IT","Бизнес","Медицина","Наука","Право"],ielts:6.5,sat:1200,language:"Английский",desc:"Университет с разнообразными программами и международным сообществом.",note:"Уточни требования и стипендии.",url:"https://www.unimelb.edu.au/"},
+{id:16,name:"Australian National University",country:"Австралия",city:"Канберра",symbol:"ANU",color:"#267f77",cost:38000,grant:35,fields:["IT","Наука","Бизнес","Право"],ielts:6.5,sat:1200,language:"Английский",desc:"Университет с сильными научными и международными программами.",note:"Проверь условия стипендий для иностранных студентов.",url:"https://www.anu.edu.au/"},
+{id:17,name:"Technical University of Munich",country:"Германия",city:"Мюнхен",symbol:"TUM",color:"#a87932",cost:4000,grant:25,fields:["IT","Инженерия","Наука","Бизнес"],ielts:6.5,sat:1200,language:"Английский / Немецкий",desc:"Технический университет с сильными инженерными и научными программами.",note:"Язык обучения, плата и условия различаются по программе.",url:"https://www.tum.de/"},
+{id:18,name:"Ludwig Maximilian University of Munich",country:"Германия",city:"Мюнхен",symbol:"LMU",color:"#477b65",cost:3000,grant:25,fields:["Медицина","Наука","Бизнес","Гуманитарные науки"],ielts:6.5,sat:0,language:"Немецкий / Английский",desc:"Крупный университет с программами в науке, гуманитарных дисциплинах и медицине.",note:"Многие программы бакалавриата могут преподаваться на немецком.",url:"https://www.lmu.de/"},
+{id:19,name:"ETH Zurich",country:"Швейцария",city:"Цюрих",symbol:"ETH",color:"#b84b3e",cost:2000,grant:35,fields:["IT","Инженерия","Наука"],ielts:7,sat:1400,language:"Немецкий / Английский",desc:"Технический университет с сильными научными и инженерными направлениями.",note:"Проверь язык программы, стоимость и финансовую поддержку.",url:"https://ethz.ch/"},
+{id:20,name:"EPFL",country:"Швейцария",city:"Лозанна",symbol:"EPFL",color:"#bb4c45",cost:2000,grant:30,fields:["IT","Инженерия","Наука"],ielts:6.5,sat:1350,language:"Французский / Английский",desc:"Университет с фокусом на технологии, инженерии и научных исследованиях.",note:"Проверь язык обучения и условия приёма.",url:"https://www.epfl.ch/"},
+{id:21,name:"National University of Singapore",country:"Сингапур",city:"Сингапур",symbol:"NUS",color:"#bb454c",cost:30000,grant:60,fields:["IT","Инженерия","Бизнес","Медицина","Наука"],ielts:6.5,sat:1400,language:"Английский",desc:"Крупный исследовательский университет с международными программами.",note:"Уточни правила финансирования и возможные обязательства по стипендии.",url:"https://nus.edu.sg/"},
+{id:22,name:"Nanyang Technological University",country:"Сингапур",city:"Сингапур",symbol:"NTU",color:"#4268a8",cost:30000,grant:60,fields:["IT","Инженерия","Бизнес","Наука"],ielts:6.5,sat:1350,language:"Английский",desc:"Университет с программами в инженерии, бизнесе и технологиях.",note:"Проверь требования для иностранных студентов.",url:"https://www.ntu.edu.sg/"},
+{id:23,name:"University of Tokyo",country:"Япония",city:"Токио",symbol:"UT",color:"#a53c50",cost:5000,grant:40,fields:["IT","Инженерия","Наука","Медицина"],ielts:6.5,sat:1350,language:"Японский / Английский",desc:"Один из ведущих университетов Японии с сильными исследовательскими направлениями.",note:"Для многих программ требуется японский язык.",url:"https://www.u-tokyo.ac.jp/"},
+{id:24,name:"Kyoto University",country:"Япония",city:"Киото",symbol:"KU",color:"#477b65",cost:5000,grant:35,fields:["IT","Инженерия","Наука","Медицина"],ielts:6.5,sat:1300,language:"Японский / Английский",desc:"Исследовательский университет с программами в науке и инженерии.",note:"Проверь язык преподавания выбранной программы.",url:"https://www.kyoto-u.ac.jp/"},
+{id:25,name:"Seoul National University",country:"Южная Корея",city:"Сеул",symbol:"SNU",color:"#3562a8",cost:8000,grant:50,fields:["IT","Инженерия","Бизнес","Медицина","Наука"],ielts:6.5,sat:1300,language:"Корейский / Английский",desc:"Университет с широким выбором программ и исследовательских центров.",note:"Требования к языку зависят от программы.",url:"https://en.snu.ac.kr/"},
+{id:26,name:"KAIST",country:"Южная Корея",city:"Тэджон",symbol:"KAIST",color:"#267f9d",cost:8000,grant:70,fields:["IT","Инженерия","Наука"],ielts:6.5,sat:1350,language:"Английский",desc:"Научно-технический университет с программами в инженерии и технологиях.",note:"Проверь доступные стипендии и критерии отбора.",url:"https://www.kaist.ac.kr/"},
+{id:27,name:"Tsinghua University",country:"Китай",city:"Пекин",symbol:"THU",color:"#a74250",cost:8000,grant:60,fields:["IT","Инженерия","Бизнес","Наука"],ielts:6.5,sat:1350,language:"Китайский / Английский",desc:"Университет с сильными инженерными, технологическими и научными направлениями.",note:"Уточни язык программы и стипендии для иностранных студентов.",url:"https://www.tsinghua.edu.cn/"},
+{id:28,name:"Peking University",country:"Китай",city:"Пекин",symbol:"PKU",color:"#a74250",cost:8000,grant:60,fields:["Бизнес","Право","Наука","Медицина","Гуманитарные науки"],ielts:6.5,sat:1350,language:"Китайский / Английский",desc:"Университет с программами в науке, гуманитарных дисциплинах и бизнесе.",note:"Проверь язык преподавания и доступные стипендии.",url:"https://english.pku.edu.cn/"},
+{id:29,name:"University of Amsterdam",country:"Нидерланды",city:"Амстердам",symbol:"UVA",color:"#b94a4b",cost:18000,grant:30,fields:["IT","Бизнес","Наука","Гуманитарные науки"],ielts:6.5,sat:1250,language:"Английский / Нидерландский",desc:"Университет с большим выбором международных программ.",note:"Стоимость и требования зависят от программы.",url:"https://www.uva.nl/"},
+{id:30,name:"Delft University of Technology",country:"Нидерланды",city:"Делфт",symbol:"TU",color:"#3683ad",cost:20000,grant:30,fields:["IT","Инженерия","Наука"],ielts:6.5,sat:1300,language:"Английский / Нидерландский",desc:"Технический университет с программами в инженерии и технологиях.",note:"Проверь требования выбранного направления.",url:"https://www.tudelft.nl/"},
+{id:31,name:"Bocconi University",country:"Италия",city:"Милан",symbol:"BU",color:"#477b65",cost:18000,grant:50,fields:["Бизнес","Право"],ielts:6.5,sat:1300,language:"Английский / Итальянский",desc:"Университет с фокусом на бизнес, экономику и право.",note:"Проверь условия финансовой помощи.",url:"https://www.unibocconi.it/"},
+{id:32,name:"University of Bologna",country:"Италия",city:"Болонья",symbol:"UNIBO",color:"#a84250",cost:4000,grant:40,fields:["IT","Медицина","Право","Наука","Гуманитарные науки"],ielts:6,sat:1200,language:"Итальянский / Английский",desc:"Университет с широким выбором академических программ.",note:"Стоимость и требования различаются по курсам.",url:"https://www.unibo.it/"},
+{id:33,name:"Sorbonne University",country:"Франция",city:"Париж",symbol:"SU",color:"#345c9a",cost:4000,grant:30,fields:["Наука","Медицина","Гуманитарные науки"],ielts:6.5,sat:1250,language:"Французский / Английский",desc:"Университет с программами в науке, медицине и гуманитарных дисциплинах.",note:"Для многих программ требуется французский язык.",url:"https://www.sorbonne-universite.fr/"},
+{id:34,name:"University of Barcelona",country:"Испания",city:"Барселона",symbol:"UB",color:"#ad4055",cost:4000,grant:30,fields:["Медицина","Бизнес","Наука","Гуманитарные науки"],ielts:6,sat:1200,language:"Испанский / Каталанский / Английский",desc:"Университет с разнообразными программами и исследовательскими направлениями.",note:"Проверь язык выбранной программы.",url:"https://www.ub.edu/"},
+{id:35,name:"University of Copenhagen",country:"Дания",city:"Копенгаген",symbol:"UCPH",color:"#a7474b",cost:15000,grant:30,fields:["Медицина","Наука","Бизнес","Гуманитарные науки"],ielts:6.5,sat:1250,language:"Датский / Английский",desc:"Исследовательский университет с международными программами.",note:"Уточни стоимость для граждан стран вне ЕС.",url:"https://www.ku.dk/"},
+{id:36,name:"Uppsala University",country:"Швеция",city:"Уппсала",symbol:"UU",color:"#3c69a2",cost:15000,grant:35,fields:["IT","Инженерия","Наука","Медицина"],ielts:6.5,sat:1250,language:"Шведский / Английский",desc:"Университет с программами в науке, инженерии и медицине.",note:"Условия стипендий и плата зависят от программы.",url:"https://www.uu.se/"},
+{id:37,name:"University of Helsinki",country:"Финляндия",city:"Хельсинки",symbol:"UH",color:"#287b9a",cost:15000,grant:40,fields:["IT","Наука","Медицина","Гуманитарные науки"],ielts:6.5,sat:1250,language:"Финский / Шведский / Английский",desc:"Исследовательский университет с международными программами.",note:"Проверь правила оплаты обучения и стипендий.",url:"https://www.helsinki.fi/"},
+{id:38,name:"University of Warsaw",country:"Польша",city:"Варшава",symbol:"UW",color:"#a84350",cost:5000,grant:30,fields:["IT","Бизнес","Право","Наука"],ielts:6,sat:1200,language:"Польский / Английский",desc:"Университет с широким выбором программ в разных областях.",note:"Проверь язык программы и требования к иностранным абитуриентам.",url:"https://en.uw.edu.pl/"},
+{id:39,name:"Charles University",country:"Чехия",city:"Прага",symbol:"CU",color:"#426b9c",cost:6000,grant:30,fields:["Медицина","Наука","Право","Гуманитарные науки"],ielts:6,sat:1200,language:"Чешский / Английский",desc:"Университет с сильными медицинскими и академическими программами.",note:"Обучение на чешском и английском может иметь разную стоимость.",url:"https://cuni.cz/"},
+{id:40,name:"University of Vienna",country:"Австрия",city:"Вена",symbol:"UV",color:"#a74250",cost:3000,grant:25,fields:["Наука","Право","Бизнес","Гуманитарные науки"],ielts:6.5,sat:1200,language:"Немецкий / Английский",desc:"Университет с широким спектром академических направлений.",note:"Для многих программ требуется немецкий язык.",url:"https://www.univie.ac.at/"},
+{id:41,name:"University of Zurich",country:"Швейцария",city:"Цюрих",symbol:"UZH",color:"#3c699e",cost:3000,grant:25,fields:["Бизнес","Медицина","Наука","Право"],ielts:6.5,sat:1250,language:"Немецкий / Английский",desc:"Университет с разнообразными научными и академическими направлениями.",note:"Проверь язык обучения и требования программы.",url:"https://www.uzh.ch/"},
+{id:42,name:"University of Cape Town",country:"ЮАР",city:"Кейптаун",symbol:"UCT",color:"#3b806f",cost:10000,grant:30,fields:["Бизнес","Медицина","Инженерия","Наука"],ielts:6.5,sat:1200,language:"Английский",desc:"Университет с программами в науке, бизнесе и медицине.",note:"Стоимость и стипендии зависят от курса.",url:"https://www.uct.ac.za/"},
+{id:43,name:"University of Auckland",country:"Новая Зеландия",city:"Окленд",symbol:"UOA",color:"#3c6ba0",cost:30000,grant:30,fields:["IT","Инженерия","Бизнес","Медицина"],ielts:6.5,sat:1250,language:"Английский",desc:"Крупный университет с международными программами.",note:"Уточни стоимость и требования для иностранных студентов.",url:"https://www.auckland.ac.nz/"},
+{id:44,name:"University of Hong Kong",country:"Гонконг",city:"Гонконг",symbol:"HKU",color:"#9f3f55",cost:25000,grant:50,fields:["IT","Бизнес","Медицина","Право","Наука"],ielts:6.5,sat:1350,language:"Английский",desc:"Международный университет с программами в разных областях.",note:"Проверь критерии стипендий и требования конкретной программы.",url:"https://www.hku.hk/"},
+{id:45,name:"Hong Kong University of Science and Technology",country:"Гонконг",city:"Гонконг",symbol:"HKUST",color:"#287b9b",cost:25000,grant:50,fields:["IT","Инженерия","Бизнес","Наука"],ielts:6.5,sat:1350,language:"Английский",desc:"Университет с сильными техническими, научными и бизнес-программами.",note:"Уточни доступные стипендии и требования.",url:"https://hkust.edu.hk/"},
+{id:46,name:"University of Malaya",country:"Малайзия",city:"Куала-Лумпур",symbol:"UM",color:"#3e719c",cost:8000,grant:30,fields:["IT","Инженерия","Бизнес","Медицина"],ielts:6,sat:1200,language:"Английский / Малайский",desc:"Университет с международными программами и разными направлениями.",note:"Проверь стоимость программы и стипендии.",url:"https://www.um.edu.my/"},
+{id:47,name:"American University of Sharjah",country:"ОАЭ",city:"Шарджа",symbol:"AUS",color:"#a7474d",cost:25000,grant:40,fields:["IT","Инженерия","Бизнес","Архитектура"],ielts:6.5,sat:1200,language:"Английский",desc:"Университет с программами в бизнесе, инженерии и архитектуре.",note:"Уточни критерии стипендий и стоимость.",url:"https://www.aus.edu/"},
+{id:48,name:"Khalifa University",country:"ОАЭ",city:"Абу-Даби",symbol:"KU",color:"#317a88",cost:30000,grant:60,fields:["IT","Инженерия","Наука"],ielts:6.5,sat:1300,language:"Английский",desc:"Университет с техническими и научными программами.",note:"Проверь условия финансирования для иностранцев.",url:"https://www.ku.ac.ae/"},
+{id:49,name:"Qatar University",country:"Катар",city:"Доха",symbol:"QU",color:"#8c3d66",cost:18000,grant:50,fields:["IT","Инженерия","Бизнес","Медицина"],ielts:6,sat:1200,language:"Английский / Арабский",desc:"Университет с широким выбором академических направлений.",note:"Требования к языку и стипендиям зависят от программы.",url:"https://www.qu.edu.qa/"},
+{id:50,name:"American University of Beirut",country:"Ливан",city:"Бейрут",symbol:"AUB",color:"#b34c4d",cost:30000,grant:40,fields:["Медицина","Бизнес","Инженерия","Наука"],ielts:6.5,sat:1250,language:"Английский",desc:"Университет с программами в медицине, бизнесе и инженерии.",note:"Проверь актуальную стоимость и доступную помощь.",url:"https://www.aub.edu.lb/"},
+{id:51,name:"University of Delhi",country:"Индия",city:"Дели",symbol:"DU",color:"#a7464a",cost:5000,grant:25,fields:["Бизнес","Наука","Право","Гуманитарные науки"],ielts:6,sat:1200,language:"Английский / Хинди",desc:"Крупный университет с большим выбором академических дисциплин.",note:"Проверь требования к документам и языку.",url:"https://www.du.ac.in/"},
+{id:52,name:"Indian Institute of Technology Bombay",country:"Индия",city:"Мумбаи",symbol:"IITB",color:"#9f543b",cost:5000,grant:30,fields:["IT","Инженерия","Наука"],ielts:6.5,sat:1300,language:"Английский",desc:"Технический институт с инженерными и научными программами.",note:"Проверь условия приёма для иностранных абитуриентов.",url:"https://www.iitb.ac.in/"},
+{id:53,name:"University of São Paulo",country:"Бразилия",city:"Сан-Паулу",symbol:"USP",color:"#4d8068",cost:3000,grant:25,fields:["Медицина","Инженерия","Наука","Бизнес"],ielts:6,sat:1200,language:"Португальский",desc:"Крупный исследовательский университет Бразилии.",note:"Для многих программ нужен португальский язык.",url:"https://www5.usp.br/"},
+{id:54,name:"National Autonomous University of Mexico",country:"Мексика",city:"Мехико",symbol:"UNAM",color:"#a8444c",cost:3000,grant:25,fields:["Медицина","Инженерия","Право","Наука"],ielts:6,sat:1200,language:"Испанский",desc:"Крупный университет с программами в разных областях.",note:"Проверь язык обучения и правила для иностранцев.",url:"https://www.unam.mx/"},
+{id:55,name:"University of Buenos Aires",country:"Аргентина",city:"Буэнос-Айрес",symbol:"UBA",color:"#3778a0",cost:2000,grant:20,fields:["Медицина","Право","Бизнес","Наука"],ielts:6,sat:1200,language:"Испанский",desc:"Университет с широким спектром академических направлений.",note:"Проверь актуальные правила и язык обучения.",url:"https://www.uba.ar/"},
+{id:56,name:"University of Tashkent for Information Technologies",country:"Узбекистан",city:"Ташкент",symbol:"TUIT",color:"#287a9a",cost:2500,grant:100,fields:["IT","Инженерия"],ielts:5.5,sat:0,language:"Узбекский / Русский / Английский",desc:"Университет с фокусом на информационные технологии и телекоммуникации.",note:"Проверь правила конкурса на грант для своей категории абитуриентов.",url:"https://tuit.uz/"},
+{id:57,name:"Westminster International University in Tashkent",country:"Узбекистан",city:"Ташкент",symbol:"WIUT",color:"#3c659d",cost:5000,grant:50,fields:["IT","Бизнес","Право"],ielts:6, sat:0,language:"Английский",desc:"Международный университет с программами в бизнесе и технологиях.",note:"Проверь актуальные стипендии и требования.",url:"https://www.wiut.uz/"},
+{id:58,name:"INHA University in Tashkent",country:"Узбекистан",city:"Ташкент",symbol:"IUT",color:"#287da5",cost:5000,grant:50,fields:["IT","Инженерия","Бизнес"],ielts:5.5,sat:0,language:"Английский",desc:"Университет с программами в информационных технологиях и логистике.",note:"Уточни конкурс и финансирование на текущий год.",url:"https://inha.uz/"},
+{id:59,name:"Tashkent State University of Economics",country:"Узбекистан",city:"Ташкент",symbol:"TSUE",color:"#36806d",cost:2500,grant:100,fields:["Бизнес","Экономика"],ielts:5,sat:0,language:"Узбекский / Русский",desc:"Университет с программами в экономике, финансах и бизнесе.",note:"Уточни правила государственного гранта.",url:"https://tsue.uz/"},
+{id:60,name:"University of World Economy and Diplomacy",country:"Узбекистан",city:"Ташкент",symbol:"UWED",color:"#9c414b",cost:3000,grant:100,fields:["Право","Бизнес","Гуманитарные науки"],ielts:6,sat:0,language:"Узбекский / Русский / Английский",desc:"Университет с направлениями международных отношений, экономики и права.",note:"Проверь конкурс и требования выбранной специальности.",url:"https://uwed.uz/"}
+];
+
+const $ = id => document.getElementById(id);
+const state = {favorites:new Set(),compare:new Set(),showFavorites:false,grantOnly:false,quickField:""};
+const safeText = value => String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = n => n===0 ? "Уточнить" : "$"+Number(n).toLocaleString("en-US");
+let toastTimer;
+
+function notify(message) {
+  const el=$("toast");
+  el.textContent=message;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove("show"),2400);
+}
+function persistState() {
+  try {
+    localStorage.setItem("unifinder-favorites",JSON.stringify([...state.favorites]));
+    localStorage.setItem("unifinder-compare",JSON.stringify([...state.compare]));
+  } catch(e) {}
+}
+function initSelects() {
+  const countries=[...new Set(universities.map(u=>u.country))].sort((a,b)=>a.localeCompare(b,"ru"));
+  countries.forEach(country=>$("countryFilter").add(new Option(country,country)));
+  updateCities();
+  $("totalStat").textContent=universities.length;
+  $("countryStat").textContent=countries.length;
+}
+function updateCities() {
+  const old=$("cityFilter").value;
+  const country=$("countryFilter").value;
+  const cities=[...new Set(universities.filter(u=>!country||u.country===country).map(u=>u.city))].sort((a,b)=>a.localeCompare(b,"ru"));
+  $("cityFilter").innerHTML='<option value="">Любой город</option>';
+  cities.forEach(city=>$("cityFilter").add(new Option(city,city)));
+  if(cities.includes(old))$("cityFilter").value=old;
+}
+function getFiltered() {
+  const country=$("countryFilter").value;
+  const city=$("cityFilter").value;
+  const field=$("fieldFilter").value;
+  const grant=$("grantFilter").value;
+  const budget=Number($("budgetFilter").value)||Infinity;
+  const query=$("searchInput").value.trim().toLowerCase();
+  const ielts=Number($("ieltsFilter").value)||0;
+  const sat=Number($("satFilter").value)||0;
+
+  let list=universities.filter(u=>{
+    const matchesQuery=[u.name,u.country,u.city,...u.fields].join(" ").toLowerCase().includes(query);
+    if(country&&u.country!==country)return false;
+    if(city&&u.city!==city)return false;
+    if(field&&!u.fields.includes(field))return false;
+    if(grant==="yes"&&u.grant<=0)return false;
+    if(grant==="full"&&u.grant<100)return false;
+    if(u.cost>budget)return false;
+    if(!matchesQuery)return false;
+    if(state.grantOnly&&u.grant<=0)return false;
+    if(state.quickField&&!u.fields.includes(state.quickField)&&u.country!==state.quickField)return false;
+    if(state.showFavorites&&!state.favorites.has(u.id))return false;
+    return true;
+  });
+  const sort=$("sortFilter").value;
+  if(sort==="cost")list.sort((a,b)=>a.cost-b.cost);
+  else if(sort==="grant")list.sort((a,b)=>b.grant-a.grant);
+  else list.sort((a,b)=>a.name.localeCompare(b.name));
+  return list;
+}
+function render() {
+  const list=getFiltered();
+  $("resultsCount").textContent=list.length+" вариантов";
+  $("resultsTitle").textContent=state.showFavorites?"Избранные университеты":state.grantOnly?"Университеты с возможностями грантов":"Университеты мира";
+
+  if(!list.length) {
+    $("universityList").innerHTML='<div class="empty"><div style="font-size:35px">🔎</div><h3>Ничего не найдено</h3><p>Попробуй изменить фильтры или сбросить поиск.</p><button class="btn btn-primary" onclick="resetFilters()">Сбросить фильтры</button></div>';
+  } else {
+    $("universityList").innerHTML=list.map(u=>`
+      <article class="university-card">
+        <div class="uni-logo" style="--uni-color:${u.color}">${safeText(u.symbol)}</div>
+        <div class="uni-main">
+          <div class="uni-name">${safeText(u.name)}</div>
+          <div class="uni-location">📍 ${safeText(u.city)}, ${safeText(u.country)}</div>
+          <div class="uni-desc">${safeText(u.desc)}</div>
+          <div class="uni-tags">${u.fields.map(f=>`<span class="uni-tag">${safeText(f)}</span>`).join("")}<span class="uni-tag">${safeText(u.language)}</span></div>
+        </div>
+        <div class="uni-side">
+          <div class="grant-label">Стоимость в год · ориентир</div>
+          <div style="font-size:13px;font-weight:800;margin-top:3px">${money(u.cost)}</div>
+          <div class="grant-label" style="margin-top:5px">Возможности финансирования</div>
+          <div class="grant-value">${u.grant===100?"До 100%":"До "+u.grant+"%"}</div>
+          <button class="btn btn-primary" data-detail="${u.id}">Подробнее →</button>
+          <div class="card-actions">
+            <button class="mini-btn ${state.favorites.has(u.id)?"saved":""}" data-favorite="${u.id}" title="Избранное">${state.favorites.has(u.id)?"♥":"♡"}</button>
+            <button class="mini-btn" data-compare="${u.id}" title="Сравнить">${state.compare.has(u.id)?"✓":"⇄"}</button>
+          </div>
+        </div>
+      </article>`).join("");
+  }
+  $("favoriteCount").textContent=state.favorites.size;
+  $("compareCount").textContent=state.compare.size;
+  $("savedStat").textContent=state.favorites.size;
+  $("comparedStat").textContent=state.compare.size;
+  $("compareBarCount").textContent=state.compare.size;
+  $("compareBar").classList.toggle("show",state.compare.size>0);
+}
+function resetFilters() {
+  ["countryFilter","cityFilter","fieldFilter","grantFilter","budgetFilter","searchInput"].forEach(id=>$(id).value="");
+  $("topSearch").value="";
+  state.showFavorites=false;state.grantOnly=false;state.quickField="";
+  document.querySelectorAll("[data-quick]").forEach(b=>b.classList.remove("active"));
+  render();
+}
+function detail(id) {
+  const u=universities.find(x=>x.id===id);
+  if(!u)return;
+  $("modalTitle").textContent=u.name;
+  $("modalBody").innerHTML=`
+    <div style="display:flex;gap:13px;align-items:center">
+      <div class="uni-logo" style="--uni-color:${u.color};flex-shrink:0">${safeText(u.symbol)}</div>
+      <div><strong style="color:var(--text)">${safeText(u.country)} · ${safeText(u.city)}</strong><div>${safeText(u.language)}</div></div>
+    </div>
+    <p>${safeText(u.desc)}</p>
+    <div class="detail-grid">
+      <div class="detail-box"><small>Стоимость в год · ориентир</small><strong>${money(u.cost)}</strong></div>
+      <div class="detail-box"><small>Возможности финансирования</small><strong style="color:var(--green)">До ${u.grant}%</strong></div>
+      <div class="detail-box"><small>IELTS · справочный ориентир</small><strong>${u.ielts.toFixed(1)}</strong></div>
+      <div class="detail-box"><small>SAT · справочный ориентир</small><strong>${u.sat||"Зависит от программы"}</strong></div>
+    </div>
+    <p><strong style="color:var(--text)">Что важно проверить</strong><br>${safeText(u.note)}</p>
+    <p>Цены, баллы и проценты финансирования в каталоге являются ориентировочными демонстрационными данными. Они не подтверждают действующие условия приёма или вероятность получения гранта. Проверяй официальные правила и сроки на сайте университета.</p>`;
+  $("modalActions").innerHTML=`
+    <button class="btn btn-primary" id="detailCompare">Добавить к сравнению</button>
+    <button class="btn btn-secondary" id="detailFavorite">${state.favorites.has(u.id)?"♥ В избранном":"♡ В избранное"}</button>
+    <button class="btn btn-secondary" id="officialSite">Официальный сайт ↗</button>`;
+  $("modal").classList.add("open");
+  $("detailCompare").addEventListener("click",()=>toggleCompare(id));
+  $("detailFavorite").addEventListener("click",()=>toggleFavorite(id));
+  $("officialSite").addEventListener("click",()=>window.open(u.url,"_blank","noopener,noreferrer"));
+}
+function toggleFavorite(id) {
+  if(state.favorites.has(id)){state.favorites.delete(id);notify("Удалено из избранного");}
+  else{state.favorites.add(id);notify("Добавлено в избранное");}
+  persistState();render();
+  if($("modal").classList.contains("open"))detail(id);
+}
+function toggleCompare(id) {
+  if(state.compare.has(id)){state.compare.delete(id);notify("Удалено из сравнения");}
+  else {
+    if(state.compare.size>=3){notify("Можно сравнить максимум 3 университета");return;}
+    state.compare.add(id);notify("Добавлено к сравнению");
+  }
+  persistState();render();
+  if($("modal").classList.contains("open"))detail(id);
+}
+function openCompare() {
+  const list=universities.filter(u=>state.compare.has(u.id));
+  if(!list.length){notify("Сначала добавь университеты кнопкой ⇄");return;}
+  $("modalTitle").textContent="Сравнение университетов";
+  $("modalBody").innerHTML=`
+    <div style="overflow-x:auto"><table class="compare-table">
+      <thead><tr><th>Параметр</th>${list.map(u=>`<th>${safeText(u.name)}</th>`).join("")}</tr></thead>
+      <tbody>
+        <tr><th>Страна</th>${list.map(u=>`<td>${safeText(u.country)}</td>`).join("")}</tr>
+        <tr><th>Город</th>${list.map(u=>`<td>${safeText(u.city)}</td>`).join("")}</tr>
+        <tr><th>Стоимость/год</th>${list.map(u=>`<td>${money(u.cost)}</td>`).join("")}</tr>
+        <tr><th>Возможности финансирования</th>${list.map(u=>`<td>До ${u.grant}%</td>`).join("")}</tr>
+        <tr><th>IELTS ориентир</th>${list.map(u=>`<td>${u.ielts.toFixed(1)}</td>`).join("")}</tr>
+        <tr><th>Направления</th>${list.map(u=>`<td>${u.fields.map(safeText).join(", ")}</td>`).join("")}</tr>
+      </tbody>
+    </table></div>
+    <p>Показатели ориентировочные. Проверяй требования на официальных сайтах университетов.</p>`;
+  $("modalActions").innerHTML='<button class="btn btn-secondary" id="doneCompare">Готово</button>';
+  $("modal").classList.add("open");
+  $("doneCompare").addEventListener("click",closeModal);
+}
+function closeModal() {$("modal").classList.remove("open")}
+function syncProfile() {
+  $("ieltsFilter").value=$("profileIELTS").value;
+  $("satFilter").value=$("profileSAT").value;
+}
+function applyAndRender() {
+  state.showFavorites=false;render();
+  $("search-section").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* Обработчики */
+$("universityList").addEventListener("click",e=>{
+  const d=e.target.closest("[data-detail]");
+  const f=e.target.closest("[data-favorite]");
+  const c=e.target.closest("[data-compare]");
+  if(d)detail(Number(d.dataset.detail));
+  if(f)toggleFavorite(Number(f.dataset.favorite));
+  if(c)toggleCompare(Number(c.dataset.compare));
+});
+$("applyFilters").addEventListener("click",applyAndRender);
+$("resetFilters").addEventListener("click",resetFilters);
+$("sortFilter").addEventListener("change",render);
+$("countryFilter").addEventListener("change",()=>{updateCities();render()});
+["cityFilter","fieldFilter","grantFilter","budgetFilter","searchInput","ieltsFilter","satFilter"].forEach(id=>{
+  $(id).addEventListener("input",()=>{state.showFavorites=false;render()});
+  $(id).addEventListener("change",()=>{state.showFavorites=false;render()});
+});
+$("topSearch").addEventListener("input",()=>{
+  $("searchInput").value=$("topSearch").value;
+  state.showFavorites=false;render();
+});
+$("favoritesNav").addEventListener("click",()=>{
+  state.showFavorites=true;state.grantOnly=false;state.quickField="";
+  render();$("search-section").scrollIntoView({behavior:"smooth"});
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  $("favoritesNav").classList.add("active");
+});
+$("compareNav").addEventListener("click",openCompare);
+$("openCompare").addEventListener("click",openCompare);
+$("clearCompare").addEventListener("click",()=>{
+  state.compare.clear();persistState();render();notify("Список сравнения очищен");
+});
+$("closeModal").addEventListener("click",closeModal);
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+
+$("saveProfile").addEventListener("click",()=>{
+  syncProfile();
+  const profile={
+    ielts:$("profileIELTS").value,
+    sat:$("profileSAT").value,
+    country:$("profileCountry").value,
+    year:$("profileYear").value
+  };
+  try{localStorage.setItem("unifinder-profile",JSON.stringify(profile))}catch(e){}
+  render();notify("Профиль сохранён");
+});
+$("profileIELTS").addEventListener("change",syncProfile);
+$("profileSAT").addEventListener("change",syncProfile);
+
+$("showGrants").addEventListener("click",()=>{
+  $("grantFilter").value="yes";state.showFavorites=false;state.grantOnly=true;
+  state.quickField="";render();
+  $("search-section").scrollIntoView({behavior:"smooth"});
+});
+document.querySelectorAll("[data-quick]").forEach(btn=>btn.addEventListener("click",()=>{
+  const value=btn.dataset.quick;
+  const same=state.quickField===value&&!state.grantOnly;
+  state.quickField=same?"":value;
+  state.grantOnly=value==="grant"?!state.grantOnly:false;
+  if(value==="grant")state.quickField="";
+  if(value==="Казахстан")$("countryFilter").value=state.quickField?"Казахстан":"";
+  if(["IT","Бизнес"].includes(value))$("fieldFilter").value=state.quickField?value:"";
+  if(value==="grant")$("grantFilter").value=state.grantOnly?"yes":"";
+  document.querySelectorAll("[data-quick]").forEach(b=>b.classList.toggle("active",b===btn&&!same));
+  updateCities();render();
+}));
+document.querySelectorAll("[data-scroll]").forEach(btn=>btn.addEventListener("click",()=>{
+  $(btn.dataset.scroll).scrollIntoView({behavior:"smooth",block:"start"});
+}));
+document.querySelectorAll(".nav button[data-target]").forEach(btn=>btn.addEventListener("click",()=>{
+  state.showFavorites=false;
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  $(btn.dataset.target).scrollIntoView({behavior:"smooth",block:"start"});
+}));
+$("themeToggle").addEventListener("click",()=>{
+  document.body.classList.toggle("light");
+  const light=document.body.classList.contains("light");
+  $("themeToggle").textContent=light?"☾":"☼";
+  try{localStorage.setItem("unifinder-theme",light?"light":"dark")}catch(e){}
+});
+
+try {
+  const fav=JSON.parse(localStorage.getItem("unifinder-favorites")||"[]");
+  const cmp=JSON.parse(localStorage.getItem("unifinder-compare")||"[]");
+  fav.forEach(id=>{if(universities.some(u=>u.id===id))state.favorites.add(id)});
+  cmp.forEach(id=>{if(universities.some(u=>u.id===id)&&state.compare.size<3)state.compare.add(id)});
+  if(localStorage.getItem("unifinder-theme")==="light") {
+    document.body.classList.add("light");$("themeToggle").textContent="☾";
+  }
+  const profile=JSON.parse(localStorage.getItem("unifinder-profile")||"null");
+  if(profile) {
+    $("profileIELTS").value=profile.ielts||"6.5";
+    $("profileSAT").value=profile.sat||"1250";
+    $("profileCountry").value=profile.country||"Узбекистан";
+    $("profileYear").value=profile.year||"2027";
+    $("ieltsFilter").value=$("profileIELTS").value;
+    $("satFilter").value=$("profileSAT").value;
+  }
+} catch(e) {}
+
+initSelects();
+render();
+</script>
+</body>
+</html>
