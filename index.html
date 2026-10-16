@@ -1,120 +1,852 @@
 
-/* ===== UNIFINDER PREMIUM BACKGROUND ===== */
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101225">
+<meta name="description" content="UniFinder — найди университет своей мечты, сравни программы и изучи возможности грантов.">
+<title>UniFinder — Найди своё будущее</title>
 
-body {
-  position: relative;
-  isolation: isolate;
+<style>
+:root{
+  --bg:#0b1020;
+  --surface:rgba(20,28,54,.84);
+  --surface2:rgba(29,39,72,.72);
+  --text:#f5f6ff;
+  --muted:#a4b0d0;
+  --line:rgba(173,187,255,.15);
+  --purple:#8872ff;
+  --purple2:#6552f4;
+  --cyan:#45d9e8;
+  --green:#43e0b0;
+  --shadow:0 18px 50px rgba(0,0,0,.2);
+  --radius:22px;
+}
+body.light{
+  --bg:#f3f5ff;
+  --surface:rgba(255,255,255,.88);
+  --surface2:rgba(245,246,255,.9);
+  --text:#1b2040;
+  --muted:#6e7695;
+  --line:rgba(92,100,160,.16);
+  --purple:#6552e8;
+  --purple2:#5743df;
+  --cyan:#079eb5;
+  --green:#128d69;
+  --shadow:0 18px 50px rgba(52,56,110,.09);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.5;
+  overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid var(--cyan);
+  outline-offset:3px;
+}
+a{color:inherit;text-decoration:none}
+
+/* ANIMATED BACKGROUND */
+.background{
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  pointer-events:none;
+  overflow:hidden;
   background:
-    radial-gradient(
-      ellipse at 5% 5%,
-      rgba(102, 88, 245, 0.13),
-      transparent 35%
-    ),
-    radial-gradient(
-      ellipse at 95% 20%,
-      rgba(57, 198, 216, 0.11),
-      transparent 32%
-    ),
-    radial-gradient(
-      ellipse at 50% 100%,
-      rgba(154, 111, 255, 0.09),
-      transparent 40%
-    ),
+    radial-gradient(ellipse at 15% 5%,rgba(103,75,255,.22),transparent 38%),
+    radial-gradient(ellipse at 85% 25%,rgba(36,178,220,.15),transparent 34%),
+    radial-gradient(ellipse at 50% 100%,rgba(133,74,255,.13),transparent 40%),
     var(--bg);
-  background-attachment: fixed;
 }
-
-/* Glowing ambient lights */
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  width: 340px;
-  height: 340px;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.22;
-  pointer-events: none;
-  z-index: -1;
-  animation: ambientFloat 14s ease-in-out infinite alternate;
-}
-
-body::before {
-  top: 8%;
-  left: -180px;
-  background: #7565ff;
-}
-
-body::after {
-  right: -180px;
-  bottom: 5%;
-  background: #38c6d8;
-  animation-delay: -7s;
-}
-
-@keyframes ambientFloat {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  to {
-    transform: translate3d(35px, -25px, 0) scale(1.15);
-  }
-}
-
-/* Subtle premium grid */
-body {
+.background:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:.24;
   background-image:
-    linear-gradient(rgba(120, 120, 180, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(120, 120, 180, 0.025) 1px, transparent 1px),
-    radial-gradient(ellipse at 5% 5%, rgba(102, 88, 245, 0.13), transparent 35%),
-    radial-gradient(ellipse at 95% 20%, rgba(57, 198, 216, 0.11), transparent 32%),
-    radial-gradient(ellipse at 50% 100%, rgba(154, 111, 255, 0.09), transparent 40%),
-    var(--bg);
-  background-size:
-    42px 42px,
-    42px 42px,
-    auto,
-    auto,
-    auto,
-    auto;
-  background-attachment: fixed;
+    linear-gradient(rgba(155,170,255,.07) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(155,170,255,.07) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+.orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(2px);
+  opacity:.65;
+  animation:float 16s ease-in-out infinite alternate;
+}
+.orb.one{
+  width:340px;height:340px;left:-190px;top:12%;
+  background:radial-gradient(circle at 35% 35%,#927bff,rgba(98,66,255,.06) 70%,transparent);
+}
+.orb.two{
+  width:400px;height:400px;right:-210px;top:35%;
+  background:radial-gradient(circle at 35% 35%,#35cde3,rgba(31,149,233,.04) 70%,transparent);
+  animation-delay:-5s;
+}
+.orb.three{
+  width:260px;height:260px;left:35%;bottom:-180px;
+  background:radial-gradient(circle,#8c59ff,transparent 70%);
+  animation-delay:-9s;
+}
+@keyframes float{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(38px,-32px,0) scale(1.12)}
 }
 
-/* Cards: floating glass effect */
-.card,
-.university-card,
-.stat-card,
-.panel {
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
+/* LAYOUT */
+.app{min-height:100vh}
+.sidebar{
+  position:fixed;inset:0 auto 0 0;width:245px;
+  padding:27px 18px;display:flex;flex-direction:column;
+  background:rgba(9,14,32,.78);
+  border-right:1px solid rgba(180,190,255,.12);
+  backdrop-filter:blur(22px);z-index:10;
 }
-
-.card:hover,
-.university-card:hover,
-.stat-card:hover,
-.panel:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
+body.light .sidebar{background:rgba(255,255,255,.8)}
+.brand{display:flex;align-items:center;gap:12px;padding:3px 10px 34px;font-size:22px;font-weight:850;letter-spacing:-.7px}
+.brand-icon{
+  width:43px;height:43px;display:grid;place-items:center;
+  border-radius:15px;font-size:23px;
+  background:linear-gradient(135deg,#9b7bff,#5145ef);
+  box-shadow:0 8px 28px rgba(104,81,255,.36);
 }
-
-/* Soft glass surfaces */
-.card,
-.university-card,
-.stat-card,
-.panel {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+.brand span:last-child{background:linear-gradient(100deg,var(--text),#9b8aff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-label{padding:0 12px 10px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase}
+.nav{display:grid;gap:7px}
+.nav button{
+  display:flex;align-items:center;gap:13px;width:100%;padding:13px 14px;
+  border:1px solid transparent;border-radius:14px;
+  background:transparent;color:var(--muted);text-align:left;
+  font-size:13px;transition:.2s;
 }
+.nav button:hover,.nav button.active{
+  color:var(--text);border-color:rgba(144,126,255,.22);
+  background:linear-gradient(100deg,rgba(113,89,255,.25),rgba(67,92,179,.08));
+}
+.nav-icon{font-size:18px;width:23px;text-align:center}
+.nav-count{margin-left:auto;font-size:11px;background:var(--purple2);color:white;padding:2px 7px;border-radius:20px}
+.sidebar-bottom{margin-top:auto}
+.sidebar-quote{
+  margin-top:23px;padding:17px;border:1px solid var(--line);
+  border-radius:17px;background:var(--surface);
+}
+.sidebar-quote strong{display:block;font-size:12px;margin-bottom:7px}
+.sidebar-quote p{margin:0;font-size:11px;color:var(--muted);line-height:1.7}
+.sidebar-footer{font-size:10px;color:var(--muted);text-align:center;padding:20px 0 0}
+.main{margin-left:245px;padding:0 34px 38px;max-width:1800px}
+.topbar{
+  min-height:83px;display:flex;align-items:center;justify-content:space-between;gap:15px;
+  border-bottom:1px solid var(--line);margin-bottom:27px;
+}
+.breadcrumb{font-size:12px;color:var(--muted)}
+.breadcrumb strong{color:var(--text)}
+.top-actions{display:flex;align-items:center;gap:12px}
+.top-search{position:relative}
+.top-search input{
+  width:250px;padding:12px 15px 12px 40px;border-radius:14px;
+  border:1px solid var(--line);background:var(--surface);color:var(--text);font-size:12px;
+}
+.search-icon{position:absolute;left:14px;top:10px;font-size:16px;color:var(--muted)}
+.icon-button{
+  width:41px;height:41px;border:1px solid var(--line);border-radius:14px;
+  background:var(--surface);color:var(--text);font-size:17px;
+}
+.icon-button:hover{border-color:var(--purple)}
+.avatar{
+  display:grid;place-items:center;width:39px;height:39px;border-radius:50%;
+  background:linear-gradient(135deg,#8d7aff,#35bfd7);color:white;font-weight:800;
+}
+.profile-mini{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700}
 
-/* Respect reduced-motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+/* HERO */
+.hero{
+  position:relative;overflow:hidden;border:1px solid var(--line);
+  border-radius:28px;padding:34px;margin-bottom:24px;
+  background:
+    radial-gradient(ellipse at 90% 15%,rgba(99,89,255,.3),transparent 40%),
+    linear-gradient(115deg,rgba(26,34,72,.92),rgba(16,34,61,.74));
+  box-shadow:var(--shadow);
+}
+body.light .hero{
+  background:
+    radial-gradient(ellipse at 90% 15%,rgba(125,109,255,.18),transparent 40%),
+    linear-gradient(115deg,rgba(255,255,255,.98),rgba(233,245,255,.92));
+}
+.hero:after{
+  content:"✦";position:absolute;right:8%;top:2%;font-size:170px;
+  line-height:1;color:rgba(161,145,255,.11);transform:rotate(-12deg);
+  pointer-events:none;
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;padding:7px 11px;
+  border:1px solid rgba(146,130,255,.28);border-radius:30px;
+  color:#c6bcff;background:rgba(117,91,255,.12);
+  font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+}
+.hero h1{font-size:clamp(30px,4vw,48px);line-height:1.12;letter-spacing:-1.7px;margin:19px 0 12px;max-width:650px}
+.gradient-text{background:linear-gradient(100deg,#a797ff,#4cd9e9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:600px;color:var(--muted);font-size:14px;line-height:1.8;margin:0 0 23px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 17px;border:1px solid transparent;border-radius:13px;
+  font-weight:750;font-size:12px;transition:transform .2s,box-shadow .2s,background .2s;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{color:white;background:linear-gradient(110deg,#8d72ff,#5b4ce9);box-shadow:0 8px 25px rgba(103,78,255,.25)}
+.btn-primary:hover{box-shadow:0 12px 30px rgba(103,78,255,.4)}
+.btn-secondary{color:var(--text);background:var(--surface);border-color:var(--line)}
+.hero-metrics{display:flex;gap:27px;flex-wrap:wrap;margin-top:29px}
+.metric{display:flex;align-items:center;gap:10px}
+.metric-icon{width:35px;height:35px;display:grid;place-items:center;border-radius:12px;background:rgba(133,111,255,.17);font-size:16px}
+.metric strong{display:block;font-size:16px}
+.metric small{display:block;color:var(--muted);font-size:10px}
+
+/* CARDS */
+.section{margin-bottom:29px;scroll-margin-top:20px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.section-title{font-size:19px;font-weight:850;letter-spacing:-.5px;margin:0}
+.section-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.text-link{background:none;border:0;color:#a99aff;font-size:11px;font-weight:750}
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.stat-card{
+  min-width:0;padding:19px;border:1px solid var(--line);border-radius:19px;
+  background:var(--surface);box-shadow:var(--shadow);transition:transform .25s,border-color .25s;
+}
+.stat-card:hover{transform:translateY(-4px);border-color:rgba(144,126,255,.4)}
+.stat-top{display:flex;justify-content:space-between;align-items:center}
+.stat-icon{width:39px;height:39px;display:grid;place-items:center;border-radius:13px;background:var(--surface2);font-size:19px}
+.stat-trend{font-size:10px;color:var(--green)}
+.stat-number{font-size:27px;font-weight:850;letter-spacing:-1px;margin-top:16px}
+.stat-label{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* FILTERS */
+.filter-panel{
+  padding:19px;border:1px solid var(--line);border-radius:21px;
+  background:var(--surface);box-shadow:var(--shadow);
+}
+.filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.field label{display:block;margin:0 0 7px 2px;font-size:10px;font-weight:750;color:var(--muted)}
+.field input,.field select{
+  width:100%;min-width:0;padding:12px 11px;border:1px solid var(--line);
+  border-radius:12px;background:var(--surface2);color:var(--text);font-size:12px;
+}
+.field select option{background:var(--bg);color:var(--text)}
+.filter-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:15px}
+.quick-tags{display:flex;gap:7px;flex-wrap:wrap}
+.tag{
+  padding:7px 11px;border:1px solid var(--line);border-radius:30px;
+  color:var(--muted);background:var(--surface2);font-size:10px;cursor:pointer;transition:.2s;
+}
+.tag:hover,.tag.active{color:var(--text);border-color:var(--purple);background:rgba(123,101,255,.15)}
+
+/* UNIVERSITY RESULTS */
+.results-toolbar{display:flex;align-items:center;gap:10px}
+.results-count{font-size:11px;color:var(--muted)}
+.results-toolbar select{max-width:165px;padding:9px;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--text);font-size:11px}
+.university-list{display:grid;gap:12px}
+.university-card{
+  display:grid;grid-template-columns:76px minmax(0,1fr) auto;
+  gap:16px;align-items:center;padding:17px;
+  border:1px solid var(--line);border-radius:20px;
+  background:var(--surface);box-shadow:var(--shadow);
+  transition:transform .25s,border-color .25s,box-shadow .25s;
+}
+.university-card:hover{transform:translateY(-3px);border-color:rgba(135,115,255,.42);box-shadow:0 18px 40px rgba(0,0,0,.13)}
+.uni-logo{
+  width:76px;height:76px;display:grid;place-items:center;border-radius:18px;
+  font-size:28px;font-weight:850;color:white;
+  background:linear-gradient(135deg,var(--uni-color,#7664f7),#283e77);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+}
+.uni-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.uni-name{font-size:14px;font-weight:850;letter-spacing:-.2px}
+.verified{color:#8d7bff;font-size:14px}
+.uni-location{font-size:10px;color:var(--muted);margin-top:5px}
+.uni-desc{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.6}
+.uni-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.uni-tag{padding:4px 8px;border-radius:7px;background:var(--surface2);color:var(--muted);font-size:9px}
+.uni-side{min-width:125px;text-align:right}
+.grant-label{font-size:10px;color:var(--muted)}
+.grant-value{font-size:17px;font-weight:850;color:var(--green);margin:3px 0 9px}
+.uni-side .btn{padding:9px 12px;font-size:10px}
+.card-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:8px}
+.mini-btn{width:31px;height:31px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);color:var(--muted)}
+.mini-btn:hover,.mini-btn.saved{color:#ff7ca8;border-color:rgba(255,124,168,.4)}
+.empty{
+  text-align:center;padding:40px 20px;border:1px dashed var(--line);
+  border-radius:20px;background:var(--surface);
+}
+.empty-icon{font-size:35px}
+.empty h3{margin:12px 0 5px}
+.empty p{color:var(--muted);font-size:12px}
+
+/* PROFILE AND SIDE PANELS */
+.two-column{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);gap:17px}
+.panel{border:1px solid var(--line);border-radius:21px;padding:21px;background:var(--surface);box-shadow:var(--shadow);min-width:0}
+.panel-heading{display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.panel-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:14px;background:rgba(130,107,255,.17);font-size:19px}
+.panel-heading h3{font-size:14px;margin:0}
+.panel-heading p{font-size:10px;color:var(--muted);margin:3px 0 0}
+.score-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.score-fields .field input{font-size:14px;font-weight:800}
+.profile-hint{margin-top:14px;padding:11px;border-radius:12px;background:rgba(68,221,177,.08);font-size:10px;color:var(--muted);line-height:1.7}
+.profile-hint strong{color:var(--green)}
+.grant-banner{
+  position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(99,78,224,.26),rgba(32,161,199,.13));
+}
+.grant-banner:after{content:"✦";position:absolute;right:-7px;top:-20px;font-size:100px;color:rgba(150,134,255,.12)}
+.grant-banner p{font-size:11px;color:var(--muted);line-height:1.8}
+.grant-banner .btn{position:relative;z-index:1}
+.country-list{display:grid;gap:13px}
+.country-row{display:flex;align-items:center;gap:10px;font-size:11px}
+.country-flag{font-size:20px}
+.country-name{flex:1}
+.country-count{color:var(--muted);font-size:10px}
+.progress{height:5px;border-radius:10px;background:var(--surface2);overflow:hidden;margin-top:6px}
+.progress span{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,var(--purple),var(--cyan))}
+.compare-bar{
+  position:fixed;left:50%;bottom:20px;transform:translateX(-50%);
+  display:none;align-items:center;gap:14px;padding:12px 16px;
+  border:1px solid var(--line);border-radius:17px;
+  background:var(--surface);box-shadow:0 20px 60px rgba(0,0,0,.28);
+  backdrop-filter:blur(20px);z-index:20;font-size:12px;max-width:calc(100% - 24px);
+}
+.compare-bar.show{display:flex}
+.compare-bar .btn{white-space:nowrap}
+
+/* MODAL */
+.modal{
+  position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+  padding:18px;background:rgba(4,7,19,.72);backdrop-filter:blur(9px);z-index:50;
+}
+.modal.open{display:flex}
+.modal-card{
+  width:min(560px,100%);max-height:85vh;overflow:auto;
+  border:1px solid var(--line);border-radius:24px;padding:25px;
+  background:var(--bg);box-shadow:0 25px 90px rgba(0,0,0,.4);
+  animation:modalIn .2s ease-out;
+}
+@keyframes modalIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.modal-head h2{margin:0;font-size:21px}
+.close-btn{width:35px;height:35px;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--text);font-size:18px}
+.modal-body{color:var(--muted);font-size:12px;line-height:1.8;margin:17px 0}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:17px 0}
+.detail-box{padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.detail-box small{display:block;color:var(--muted);font-size:10px}
+.detail-box strong{display:block;margin-top:5px;font-size:14px}
+.modal-actions{display:flex;gap:9px;flex-wrap:wrap}
+.compare-table{width:100%;border-collapse:collapse;font-size:11px}
+.compare-table th,.compare-table td{padding:12px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.compare-table th{color:var(--muted);font-weight:600}
+.toast{
+  position:fixed;right:22px;bottom:22px;padding:13px 17px;border-radius:13px;
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);
+  font-size:12px;z-index:80;opacity:0;transform:translateY(10px);pointer-events:none;transition:.25s;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.mobile-menu{display:none}
+.site-footer{padding:23px 0 0;text-align:center;color:var(--muted);font-size:10px;border-top:1px solid var(--line);margin-top:28px}
+
+/* RESPONSIVE */
+@media(max-width:1200px){
+  .sidebar{width:215px}
+  .main{margin-left:215px;padding:0 22px 30px}
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:850px){
+  .sidebar{width:70px;padding:22px 10px}
+  .brand{padding:0 0 28px;justify-content:center}
+  .brand span:last-child,.nav-label,.nav button .nav-text,.nav-count,.sidebar-quote,.sidebar-footer{display:none}
+  .nav button{justify-content:center;padding:13px 5px}
+  .nav-icon{font-size:20px}
+  .main{margin-left:70px;padding:0 17px 28px}
+  .two-column{grid-template-columns:1fr}
+  .top-search input{width:190px}
+  .profile-mini .profile-name{display:none}
+}
+@media(max-width:600px){
+  .sidebar{display:none}
+  .main{margin-left:0;padding:0 13px 24px}
+  .topbar{min-height:68px;margin-bottom:18px}
+  .breadcrumb{display:none}
+  .top-actions{width:100%;justify-content:space-between}
+  .top-search{flex:1}
+  .top-search input{width:100%}
+  .hero{padding:23px 19px;border-radius:22px}
+  .hero h1{font-size:32px;letter-spacing:-1px}
+  .hero p{font-size:12px}
+  .hero-metrics{gap:15px}
+  .metric{gap:7px}
+  .metric-icon{width:31px;height:31px}
+  .metric strong{font-size:13px}
+  .metric small{font-size:9px}
+  .stats-grid{gap:9px}
+  .stat-card{padding:13px;border-radius:16px}
+  .stat-number{font-size:23px}
+  .stat-label{font-size:10px}
+  .filter-grid{grid-template-columns:1fr 1fr;gap:9px}
+  .filter-panel{padding:13px}
+  .field input,.field select{font-size:11px;padding:11px 8px}
+  .section-title{font-size:17px}
+  .section-head{align-items:flex-start}
+  .results-toolbar{flex-wrap:wrap;justify-content:flex-end}
+  .university-card{grid-template-columns:54px minmax(0,1fr);gap:11px;padding:12px}
+  .uni-logo{width:54px;height:54px;border-radius:14px;font-size:22px;grid-row:1}
+  .uni-main{min-width:0}
+  .uni-name{font-size:12px}
+  .uni-location,.uni-desc{font-size:10px}
+  .uni-side{grid-column:2;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;min-width:0}
+  .grant-value{font-size:14px;margin-bottom:0}
+  .uni-side .btn{font-size:10px}
+  .card-actions{margin:0}
+  .panel{padding:16px}
+  .compare-bar{gap:8px;padding:10px;font-size:10px}
+  .compare-bar .btn{padding:9px;font-size:10px}
+  .modal-card{padding:19px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}
+}
+</style>
+</head>
+
+<body>
+<div class="background" aria-hidden="true">
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <div class="orb three"></div>
+</div>
+
+<div class="app">
+<aside class="sidebar">
+  <a href="#" class="brand" aria-label="UniFinder home">
+    <span class="brand-icon">🎓</span><span>UniFinder</span>
+  </a>
+
+  <div class="nav-label">Рабочее пространство</div>
+  <nav class="nav">
+    <button class="active" data-target="home"><span class="nav-icon">⌂</span><span class="nav-text">Главная</span></button>
+    <button data-target="search-section"><span class="nav-icon">⌕</span><span class="nav-text">Поиск вузов</span></button>
+    <button data-target="search-section" id="favoritesNav"><span class="nav-icon">♡</span><span class="nav-text">Избранное</span><span class="nav-count" id="favoriteCount">0</span></button>
+    <button id="compareNav"><span class="nav-icon">⇄</span><span class="nav-text">Сравнение</span><span class="nav-count" id="compareCount">0</span></button>
+    <button data-target="profile-section"><span class="nav-icon">♙</span><span class="nav-text">Мой профиль</span></button>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-quote">
+      <strong>✦ Большие цели</strong>
+      <p>Твоё будущее начинается с одного правильного шага. Изучай возможности и выбирай осознанно.</p>
+    </div>
+    <div class="sidebar-footer">Created by Alikhan</div>
+  </div>
+</aside>
+
+<main class="main" id="home">
+  <header class="topbar">
+    <div class="breadcrumb">Рабочее пространство / <strong>Главная</strong></div>
+    <div class="top-actions">
+      <div class="top-search">
+        <span class="search-icon">⌕</span>
+        <input id="topSearch" type="search" placeholder="Поиск университетов..." aria-label="Поиск университетов">
+      </div>
+      <button class="icon-button" id="themeToggle" title="Сменить тему" aria-label="Сменить тему">☼</button>
+      <div class="profile-mini"><div class="avatar">A</div><span class="profile-name">Alikhan</span></div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <span class="eyebrow">✦ ТВОЙ ПУТЬ К УСПЕХУ</span>
+    <h1>Твоё будущее начинается <span class="gradient-text">здесь.</span></h1>
+    <p>Находи университеты, изучай возможности грантов и сравнивай варианты. Построй собственный путь к образованию своей мечты.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" data-scroll="search-section">Найти университет <span>→</span></button>
+      <button class="btn btn-secondary" data-scroll="profile-section">Настроить мой профиль</button>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric"><div class="metric-icon">🌍</div><div><strong>По всему миру</strong><small>Разные страны и города</small></div></div>
+      <div class="metric"><div class="metric-icon">🎯</div><div><strong>Твой профиль</strong><small>Подбор по твоим баллам</small></div></div>
+      <div class="metric"><div class="metric-icon">✧</div><div><strong>Гранты</strong><small>Возможности финансирования</small></div></div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Статистика">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-top"><div class="stat-icon">🏛️</div><span class="stat-trend">Каталог</span></div><div class="stat-number" id="totalStat">8</div><div class="stat-label">Университетов в демо-каталоге</div></div>
+      <div class="stat-card"><div class="stat-top"><div class="stat-icon">🌐</div><span class="stat-trend">Выбор</span></div><div class="stat-number" id="countryStat">6</div><div class="stat-label">Стран для поиска</div></div>
+      <div class="stat-card"><div class="stat-top"><div class="stat-icon">💜</div><span class="stat-trend">Твой список</span></div><div class="stat-number" id="savedStat">0</div><div class="stat-label">В избранном</div></div>
+      <div class="stat-card"><div class="stat-top"><div class="stat-icon">⚖️</div><span class="stat-trend">Выбор</span></div><div class="stat-number" id="comparedStat">0</div><div class="stat-label">На сравнении</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="search-section">
+    <div class="section-head">
+      <div><h2 class="section-title">Найди свой университет</h2><div class="section-sub">Настрой фильтры под свои цели</div></div>
+    </div>
+    <div class="filter-panel">
+      <div class="filter-grid">
+        <div class="field"><label for="countryFilter">СТРАНА</label><select id="countryFilter"><option value="">Любая страна</option></select></div>
+        <div class="field"><label for="cityFilter">ГОРОД</label><select id="cityFilter"><option value="">Любой город</option></select></div>
+        <div class="field"><label for="fieldFilter">НАПРАВЛЕНИЕ</label><select id="fieldFilter"><option value="">Любая специальность</option><option>IT</option><option>Инженерия</option><option>Бизнес</option><option>Медицина</option><option>Право</option><option>Наука</option><option>Гуманитарные науки</option></select></div>
+        <div class="field"><label for="grantFilter">ФИНАНСИРОВАНИЕ</label><select id="grantFilter"><option value="">Любой вариант</option><option value="yes">Есть гранты</option><option value="full">Полный грант (уточнить условия)</option></select></div>
+        <div class="field"><label for="budgetFilter">БЮДЖЕТ В ГОД (USD)</label><select id="budgetFilter"><option value="">Любой бюджет</option><option value="10000">До $10 000</option><option value="25000">До $25 000</option><option value="50000">До $50 000</option></select></div>
+        <div class="field"><label for="ieltsFilter">МОЙ IELTS</label><input id="ieltsFilter" type="number" min="0" max="9" step="0.5" value="6.5"></div>
+        <div class="field"><label for="satFilter">МОЙ SAT</label><input id="satFilter" type="number" min="400" max="1600" step="10" value="1250"></div>
+        <div class="field"><label for="searchInput">НАЗВАНИЕ / ГОРОД</label><input id="searchInput" type="search" placeholder="Например, Astana..."></div>
+      </div>
+      <div class="filter-bottom">
+        <div class="quick-tags">
+          <button class="tag" data-quick="grant">🎓 Гранты</button>
+          <button class="tag" data-quick="IT">💻 IT</button>
+          <button class="tag" data-quick="Бизнес">📈 Бизнес</button>
+          <button class="tag" data-quick="Казахстан">🇰🇿 Казахстан</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" id="resetFilters">Сбросить</button>
+          <button class="btn btn-primary" id="applyFilters">Найти варианты →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div><h2 class="section-title" id="resultsTitle">Рекомендуемые университеты</h2><div class="section-sub">Изучи варианты и сравни условия поступления</div></div>
+      <div class="results-toolbar">
+        <span class="results-count" id="resultsCount">8 вариантов</span>
+        <select id="sortFilter" aria-label="Сортировка"><option value="name">По названию</option><option value="cost">По стоимости</option><option value="grant">По грантам</option></select>
+      </div>
+    </div>
+    <div class="university-list" id="universityList"></div>
+  </section>
+
+  <section class="section" id="profile-section">
+    <div class="section-head"><div><h2 class="section-title">Твой профиль поступления</h2><div class="section-sub">Укажи баллы для персонализированного поиска</div></div></div>
+    <div class="two-column">
+      <div class="panel">
+        <div class="panel-heading"><div class="panel-icon">♙</div><div><h3>Академические результаты</h3><p>Изменяй баллы и используй их в фильтрах</p></div></div>
+        <div class="score-fields">
+          <div class="field"><label for="profileIELTS">IELTS BAND</label><input type="number" id="profileIELTS" min="0" max="9" step="0.5" value="6.5"></div>
+          <div class="field"><label for="profileSAT">SAT SCORE</label><input type="number" id="profileSAT" min="400" max="1600" step="10" value="1250"></div>
+          <div class="field"><label for="profileCountry">ГРАЖДАНСТВО</label><input id="profileCountry" value="Узбекистан"></div>
+          <div class="field"><label for="profileYear">ГОД ПОСТУПЛЕНИЯ</label><input id="profileYear" value="2027" inputmode="numeric"></div>
+        </div>
+        <div class="profile-hint"><strong>Важно:</strong> подходящие баллы не гарантируют поступление или грант. Проверяй официальные требования, сроки и условия для иностранных абитуриентов.</div>
+        <div style="margin-top:14px"><button class="btn btn-primary" id="saveProfile">Сохранить профиль</button></div>
+      </div>
+      <div style="display:grid;gap:17px;align-content:start">
+        <div class="panel grant-banner">
+          <div class="panel-heading"><div class="panel-icon">🎓</div><div><h3>Гранты и стипендии</h3><p>Возможности финансирования</p></div></div>
+          <p>Сравнивай стипендии, требования и стоимость обучения. Условия могут различаться для иностранных студентов.</p>
+          <button class="btn btn-primary" id="showGrants">Показать варианты →</button>
+        </div>
+        <div class="panel">
+          <div class="panel-heading"><div class="panel-icon">🌍</div><div><h3>Популярные направления</h3><p>Страны в демо-каталоге</p></div></div>
+          <div class="country-list">
+            <div><div class="country-row"><span class="country-flag">🇺🇸</span><span class="country-name">США</span><span class="country-count">2 в каталоге</span></div><div class="progress"><span style="width:85%"></span></div></div>
+            <div><div class="country-row"><span class="country-flag">🇬🇧</span><span class="country-name">Великобритания</span><span class="country-count">1 в каталоге</span></div><div class="progress"><span style="width:65%"></span></div></div>
+            <div><div class="country-row"><span class="country-flag">🇰🇿</span><span class="country-name">Казахстан</span><span class="country-count">2 в каталоге</span></div><div class="progress"><span style="width:58%"></span></div></div>
+            <div><div class="country-row"><span class="country-flag">🇨🇦</span><span class="country-name">Канада</span><span class="country-count">1 в каталоге</span></div><div class="progress"><span style="width:45%"></span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">UniFinder · Твой путь к образованию начинается здесь.<br><br>Created by Alikhan</footer>
+</main>
+</div>
+
+<div class="compare-bar" id="compareBar">
+  <span>⚖️ Для сравнения: <strong id="compareBarCount">0</strong></span>
+  <button class="btn btn-primary" id="openCompare">Сравнить</button>
+  <button class="icon-button" id="clearCompare" aria-label="Очистить сравнение">×</button>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="modalTitle">Университет</h2><button class="close-btn" id="closeModal" aria-label="Закрыть">×</button></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+
+/* Демо-данные. Перед публикацией проверь стоимость и гранты
+   на официальных сайтах каждого университета. */
+const universities = [
+ {id:1,name:"Astana IT University",country:"Казахстан",city:"Астана",symbol:"AITU",color:"#6259e8",cost:6500,grant:100,fields:["IT","Инженерия","Бизнес"],ielts:5.0,sat:0,language:"Английский",desc:"Университет с фокусом на информационные технологии, цифровые навыки и инновации.",note:"Проверь условия государственных и внутренних грантов для граждан Узбекистана."},
+ {id:2,name:"Nazarbayev University",country:"Казахстан",city:"Астана",symbol:"NU",color:"#188b9b",cost:15000,grant:100,fields:["IT","Инженерия","Наука","Бизнес"],ielts:6.5,sat:0,language:"Английский",desc:"Исследовательский университет с международными академическими программами.",note:"Гранты и критерии для иностранных абитуриентов необходимо уточнить в приёмной комиссии."},
+ {id:3,name:"Massachusetts Institute of Technology",country:"США",city:"Кембридж",symbol:"MIT",color:"#a34b57",cost:60000,grant:100,fields:["IT","Инженерия","Наука","Бизнес"],ielts:7.0,sat:1500,language:"Английский",desc:"Известный университет с сильными направлениями инженерии, технологий и науки.",note:"Стоимость указана приблизительно. Финансовая помощь зависит от правил университета и конкретной заявки."},
+ {id:4,name:"University of Oxford",country:"Великобритания",city:"Оксфорд",symbol:"OX",color:"#385b9b",cost:50000,grant:50,fields:["Медицина","Право","Гуманитарные науки","Наука","IT"],ielts:7.0,sat:1400,language:"Английский",desc:"Университет с широким выбором академических программ и исследовательских возможностей.",note:"Требования зависят от программы. Для иностранных студентов полное финансирование ограничено."},
+ {id:5,name:"Harvard University",country:"США",city:"Кембридж",symbol:"H",color:"#a83252",cost:60000,grant:100,fields:["Бизнес","Право","Медицина","Наука","IT"],ielts:7.0,sat:1500,language:"Английский",desc:"Университет с большим выбором направлений и развитой исследовательской средой.",note:"Процент гранта в карточке не является личной вероятностью получения финансирования."},
+ {id:6,name:"University of Toronto",country:"Канада",city:"Торонто",symbol:"UofT",color:"#bf3449",cost:45000,grant:35,fields:["IT","Инженерия","Медицина","Бизнес","Наука"],ielts:6.5,sat:1300,language:"Английский",desc:"Крупный исследовательский университет с программами в различных областях.",note:"Стипендии, требования и цены зависят от выбранной программы."},
+ {id:7,name:"University of Melbourne",country:"Австралия",city:"Мельбурн",symbol:"M",color:"#2876a8",cost:40000,grant:40,fields:["IT","Бизнес","Медицина","Наука","Право"],ielts:6.5,sat:1200,language:"Английский",desc:"Университет с разнообразными программами и международным студенческим сообществом.",note:"Уточни требования к документам, английскому языку и стипендиям."},
+ {id:8,name:"Technical University of Munich",country:"Германия",city:"Мюнхен",symbol:"TUM",color:"#a87932",cost:4000,grant:25,fields:["IT","Инженерия","Наука","Бизнес"],ielts:6.5,sat:1200,language:"Английский / Немецкий",desc:"Технический университет с программами в области инженерии, науки и технологий.",note:"Стоимость и язык обучения зависят от программы и статуса студента."}
+];
+
+const $ = id => document.getElementById(id);
+const state = {favorites:new Set(),compare:new Set(),showFavorites:false,grantOnly:false,quickField:""};
+let toastTimer;
+
+function notify(message){
+  const el=$("toast");
+  el.textContent=message;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove("show"),2600);
+}
+function safeText(value){
+  return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function money(value){
+  return value.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0});
+}
+function initSelects(){
+  const countries=[...new Set(universities.map(u=>u.country))].sort();
+  const cities=[...new Set(universities.map(u=>u.city))].sort();
+  countries.forEach(v=>$("countryFilter").add(new Option(v,v)));
+  cities.forEach(v=>$("cityFilter").add(new Option(v,v)));
+  $("totalStat").textContent=universities.length;
+  $("countryStat").textContent=countries.length;
+}
+function matches(u){
+  const country=$("countryFilter").value;
+  const city=$("cityFilter").value;
+  const field=$("fieldFilter").value;
+  const grant=$("grantFilter").value;
+  const budget=$("budgetFilter").value;
+  const search=$("searchInput").value.trim().toLowerCase();
+  const ielts=Number($("ieltsFilter").value)||0;
+  const sat=Number($("satFilter").value)||0;
+  const query=(u.name+" "+u.country+" "+u.city+" "+u.fields.join(" ")).toLowerCase();
+
+  if(country&&u.country!==country)return false;
+  if(city&&u.city!==city)return false;
+  if(field&&!u.fields.includes(field))return false;
+  if(grant==="yes"&&u.grant<=0)return false;
+  if(grant==="full"&&u.grant<100)return false;
+  if(budget&&u.cost>Number(budget))return false;
+  if(search&&!query.includes(search))return false;
+  if(state.showFavorites&&!state.favorites.has(u.id))return false;
+  if(state.grantOnly&&u.grant<=0)return false;
+  if(state.quickField&&!u.fields.includes(state.quickField)&&u.country!==state.quickField)return false;
+  // IELTS/SAT are shown as profile information; not hard filters by default.
+  // Requirements vary by course and admission year.
+  return true;
+}
+function render(){
+  let list=universities.filter(matches);
+  const sort=$("sortFilter").value;
+  if(sort==="cost")list.sort((a,b)=>a.cost-b.cost);
+  else if(sort==="grant")list.sort((a,b)=>b.grant-a.grant);
+  else list.sort((a,b)=>a.name.localeCompare(b.name));
+
+  $("resultsCount").textContent=list.length+" вариантов";
+  $("resultsTitle").textContent=state.showFavorites?"Избранные университеты":state.grantOnly?"Университеты с грантами":"Рекомендуемые университеты";
+  $("favoriteCount").textContent=state.favorites.size;
+  $("compareCount").textContent=state.compare.size;
+  $("savedStat").textContent=state.favorites.size;
+  $("comparedStat").textContent=state.compare.size;
+  $("compareBarCount").textContent=state.compare.size;
+  $("compareBar").classList.toggle("show",state.compare.size>0);
+
+  const container=$("universityList");
+  if(!list.length){
+    container.innerHTML='<div class="empty"><div class="empty-icon">🔎</div><h3>Ничего не найдено</h3><p>Попробуй изменить фильтры или очистить поиск.</p><button class="btn btn-primary" id="emptyReset">Сбросить фильтры</button></div>';
+    $("emptyReset").addEventListener("click",resetFilters);
+    return;
   }
+  container.innerHTML=list.map(u=>`
+    <article class="university-card">
+      <div class="uni-logo" style="--uni-color:${u.color}">${safeText(u.symbol)}</div>
+      <div class="uni-main">
+        <div class="uni-name-row"><span class="uni-name">${safeText(u.name)}</span><span class="verified" title="Карточка каталога">✦</span></div>
+        <div class="uni-location">⌖ ${safeText(u.country)} · ${safeText(u.city)}</div>
+        <div class="uni-desc">${safeText(u.desc)}</div>
+        <div class="uni-tags">${u.fields.slice(0,3).map(f=>`<span class="uni-tag">${safeText(f)}</span>`).join("")}<span class="uni-tag">${safeText(u.language)}</span></div>
+      </div>
+      <div class="uni-side">
+        <div><div class="grant-label">Стоимость в год · ориентир</div><div style="font-size:14px;font-weight:800;margin-top:3px">${money(u.cost)}</div><div class="grant-label" style="margin-top:7px">Возможности грантов</div><div class="grant-value">${u.grant===100?"До 100%":"До "+u.grant+"%"}</div></div>
+        <button class="btn btn-primary" data-detail="${u.id}">Подробнее →</button>
+        <div class="card-actions">
+          <button class="mini-btn ${state.favorites.has(u.id)?"saved":""}" data-favorite="${u.id}" title="Избранное">${state.favorites.has(u.id)?"♥":"♡"}</button>
+          <button class="mini-btn" data-compare="${u.id}" title="Сравнить">${state.compare.has(u.id)?"✓":"⇄"}</button>
+        </div>
+      </div>
+    </article>`).join("");
 }
+function resetFilters(){
+  ["countryFilter","cityFilter","fieldFilter","grantFilter","budgetFilter","searchInput"].forEach(id=>$(id).value="");
+  state.showFavorites=false;state.grantOnly=false;state.quickField="";
+  document.querySelectorAll("[data-quick]").forEach(b=>b.classList.remove("active"));
+  render();
+}
+function detail(id){
+  const u=universities.find(x=>x.id===id);
+  if(!u)return;
+  $("modalTitle").textContent=u.name;
+  $("modalBody").innerHTML=`
+    <div style="display:flex;gap:13px;align-items:center">
+      <div class="uni-logo" style="--uni-color:${u.color};flex-shrink:0">${safeText(u.symbol)}</div>
+      <div><strong style="color:var(--text)">${safeText(u.country)} · ${safeText(u.city)}</strong><div style="margin-top:5px">${safeText(u.language)}</div></div>
+    </div>
+    <p>${safeText(u.desc)}</p>
+    <div class="detail-grid">
+      <div class="detail-box"><small>Ориентировочная стоимость в год</small><strong>${money(u.cost)}</strong></div>
+      <div class="detail-box"><small>Возможности грантов</small><strong style="color:var(--green)">До ${u.grant}%</strong></div>
+      <div class="detail-box"><small>IELTS — справочный ориентир</small><strong>${u.ielts.toFixed(1)}</strong></div>
+      <div class="detail-box"><small>SAT — справочный ориентир</small><strong>${u.sat?u.sat:"Зависит от программы"}</strong></div>
+    </div>
+    <p><strong style="color:var(--text)">Что важно проверить</strong><br>${safeText(u.note)}</p>
+    <p>Эти сведения — демонстрационные ориентиры, а не подтверждение действующих условий приёма. Проверь официальные правила, сроки, требования для иностранных студентов и наличие финансирования на сайте университета.</p>`;
+  $("modalActions").innerHTML=`
+    <button class="btn btn-primary" id="detailCompare">Добавить к сравнению</button>
+    <button class="btn btn-secondary" id="detailFavorite">${state.favorites.has(u.id)?"♥ В избранном":"♡ В избранное"}</button>`;
+  $("modal").classList.add("open");
+  $("detailCompare").addEventListener("click",()=>toggleCompare(id));
+  $("detailFavorite").addEventListener("click",()=>toggleFavorite(id));
+}
+function toggleFavorite(id){
+  if(state.favorites.has(id)){state.favorites.delete(id);notify("Удалено из избранного");}
+  else{state.favorites.add(id);notify("Добавлено в избранное");}
+  render();
+  if($("modal").classList.contains("open"))detail(id);
+}
+function toggleCompare(id){
+  if(state.compare.has(id)){state.compare.delete(id);notify("Удалено из сравнения");}
+  else{
+    if(state.compare.size>=3){notify("Можно сравнить максимум 3 университета");return;}
+    state.compare.add(id);notify("Добавлено к сравнению");
+  }
+  render();
+  if($("modal").classList.contains("open"))detail(id);
+}
+function openCompare(){
+  const list=universities.filter(u=>state.compare.has(u.id));
+  if(!list.length){notify("Сначала добавь университеты кнопкой ⇄");return;}
+  $("modalTitle").textContent="Сравнение университетов";
+  $("modalBody").innerHTML=`
+    <div style="overflow-x:auto"><table class="compare-table">
+      <thead><tr><th>Параметр</th>${list.map(u=>`<th>${safeText(u.name)}</th>`).join("")}</tr></thead>
+      <tbody>
+        <tr><th>Страна</th>${list.map(u=>`<td>${safeText(u.country)}</td>`).join("")}</tr>
+        <tr><th>Город</th>${list.map(u=>`<td>${safeText(u.city)}</td>`).join("")}</tr>
+        <tr><th>Стоимость/год</th>${list.map(u=>`<td>${money(u.cost)}</td>`).join("")}</tr>
+        <tr><th>Гранты</th>${list.map(u=>`<td>До ${u.grant}%</td>`).join("")}</tr>
+        <tr><th>IELTS ориентир</th>${list.map(u=>`<td>${u.ielts.toFixed(1)}</td>`).join("")}</tr>
+        <tr><th>Направления</th>${list.map(u=>`<td>${u.fields.map(safeText).join(", ")}</td>`).join("")}</tr>
+      </tbody>
+    </table></div>
+    <p>Стоимость и гранты в этом демонстрационном каталоге нужно проверить на официальных сайтах. Сравнение не означает, что требования к поступлению выполнены.</p>`;
+  $("modalActions").innerHTML='<button class="btn btn-secondary" id="doneCompare">Готово</button>';
+  $("modal").classList.add("open");
+  $("doneCompare").addEventListener("click",closeModal);
+}
+function closeModal(){$("modal").classList.remove("open")}
+function syncProfile(){
+  $("ieltsFilter").value=$("profileIELTS").value;
+  $("satFilter").value=$("profileSAT").value;
+}
+function applyAndRender(){state.showFavorites=false;render();$("search-section").scrollIntoView({behavior:"smooth",block:"start"})}
+
+/* Events */
+$("universityList").addEventListener("click",e=>{
+  const detailBtn=e.target.closest("[data-detail]");
+  const favoriteBtn=e.target.closest("[data-favorite]");
+  const compareBtn=e.target.closest("[data-compare]");
+  if(detailBtn)detail(Number(detailBtn.dataset.detail));
+  if(favoriteBtn)toggleFavorite(Number(favoriteBtn.dataset.favorite));
+  if(compareBtn)toggleCompare(Number(compareBtn.dataset.compare));
+});
+$("applyFilters").addEventListener("click",applyAndRender);
+$("resetFilters").addEventListener("click",resetFilters);
+$("sortFilter").addEventListener("change",render);
+["countryFilter","cityFilter","fieldFilter","grantFilter","budgetFilter","searchInput","ieltsFilter","satFilter"].forEach(id=>{
+  $(id).addEventListener("input",()=>{state.showFavorites=false;render()});
+  $(id).addEventListener("change",()=>{state.showFavorites=false;render()});
+});
+$("topSearch").addEventListener("input",()=>{
+  $("searchInput").value=$("topSearch").value;
+  state.showFavorites=false;render();
+});
+$("favoritesNav").addEventListener("click",()=>{
+  state.showFavorites=true;state.grantOnly=false;state.quickField="";
+  render();$("search-section").scrollIntoView({behavior:"smooth"});
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  $("favoritesNav").classList.add("active");
+});
+$("compareNav").addEventListener("click",openCompare);
+$("openCompare").addEventListener("click",openCompare);
+$("clearCompare").addEventListener("click",()=>{state.compare.clear();render();notify("Список сравнения очищен")});
+$("closeModal").addEventListener("click",closeModal);
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+$("saveProfile").addEventListener("click",()=>{
+  syncProfile();
+  render();
+  notify("Профиль применён к поиску");
+});
+$("profileIELTS").addEventListener("change",syncProfile);
+$("profileSAT").addEventListener("change",syncProfile);
+$("showGrants").addEventListener("click",()=>{
+  $("grantFilter").value="yes";state.showFavorites=false;state.grantOnly=true;
+  state.quickField="";render();$("search-section").scrollIntoView({behavior:"smooth"});
+});
+document.querySelectorAll("[data-quick]").forEach(btn=>btn.addEventListener("click",()=>{
+  const value=btn.dataset.quick;
+  const same=state.quickField===value && !state.grantOnly;
+  state.quickField=same?"":(value==="grant"?"":value);
+  state.grantOnly=value==="grant"?!state.grantOnly:false;
+  if(value==="Казахстан")$("countryFilter").value=state.quickField?"Казахстан":"";
+  if(["IT","Бизнес"].includes(value))$("fieldFilter").value=state.quickField?value:"";
+  if(value==="grant")$("grantFilter").value=state.grantOnly?"yes":"";
+  document.querySelectorAll("[data-quick]").forEach(b=>b.classList.toggle("active",b===btn&&!same));
+  render();
+}));
+document.querySelectorAll("[data-scroll]").forEach(btn=>btn.addEventListener("click",()=>{
+  $(btn.dataset.scroll).scrollIntoView({behavior:"smooth",block:"start"});
+}));
+document.querySelectorAll(".nav button[data-target]").forEach(btn=>btn.addEventListener("click",()=>{
+  const target=btn.dataset.target;
+  if(btn.id==="favoritesNav")return;
+  state.showFavorites=false;
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  $(target).scrollIntoView({behavior:"smooth",block:"start"});
+}));
+$("themeToggle").addEventListener("click",()=>{
+  document.body.classList.toggle("light");
+  const light=document.body.classList.contains("light");
+  $("themeToggle").textContent=light?"☾":"☼";
+  try{localStorage.setItem("unifinder-theme",light?"light":"dark")}catch(e){}
+});
+try{
+  if(localStorage.getItem("unifinder-theme")==="light"){
+    document.body.classList.add("light");$("themeToggle").textContent="☾";
+  }
+}catch(e){}
+
+initSelects();
+render();
+</script>
+</body>
+</html>
